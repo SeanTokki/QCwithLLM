@@ -1,0 +1,178 @@
+{
+    "naver_id": 11718044,
+    "naver_url": "https://pcmap.place.naver.com/place/11718044?entry=bmp&from=map&fromPanelNum=2&timestamp=202507241307&locale=ko&svcName=map_pcv5&searchText=%EA%B4%91%ED%99%94%EB%AC%B8%20%EB%A7%9B%EC%A7%91",
+    "gps_latitude": 37.5632555,
+    "gps_longitude": 126.9760158,
+    "name": "만족오향족발 시청점",
+    "category": "족발,보쌈",
+    "address": "서울 중구 서소문로 134-7",
+    "instagram_link": null,
+    "phone": "02-753-4755",
+    "seoul_michelin": true,
+    "distance_from_subway": 66,
+    "distance_from_subway_origin": "12시청역 8번 출구에서 66m 미터",
+    "parking_available": false,
+    "visitor_review_count": 4634,
+    "blog_review_count": 4317,
+    "menu_list": [
+      {
+        "name": "[서울3대족발]만족오향족발(중 (2~3인분))",
+        "intro": "소비자가 인정한 오향족발 시그니쳐 메뉴 'ㅁ'",
+        "price": "39,000원",
+        "is_representative": true
+      },
+      {
+        "name": "[서울3대족발]만족오향족발(대 (3~4인분))",
+        "intro": "소비자가 인정한 오향족발 시그니쳐 메뉴 'ㅁ'",
+        "price": "44,000원",
+        "is_representative": true
+      },
+      {
+        "name": "[서울3대족발]만족오향족발(특대(4~5인분))",
+        "intro": "소비자가 인정한 오향족발 시그니쳐 메뉴 'ㅁ'",
+        "price": "60,000원",
+        "is_representative": true
+      },
+      {
+        "name": "[미슐랭가이드 8년 연속 선정]반반족발(중 (2~3인분))",
+        "intro": "두가지맛 전부 포기할수 없어 'ㅅ'",
+        "price": "42,000원",
+        "is_representative": true
+      },
+      {
+        "name": "[미슐랭가이드 8년 연속 선정]반반족발(대 (3~4인분))",
+        "intro": "두가지맛 전부 포기할수 없어 'ㅅ'",
+        "price": "50,000원",
+        "is_representative": true
+      }
+    ],
+    "image_list": [
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20151104_45%2F14466229395131mLRw_JPEG%2F167054567237814_0.jpg",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20151104_225%2F1446622939657uChxA_JPEG%2F167054567237814_1.jpg",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20151104_162%2F144662293975680SrU_JPEG%2F167054567237814_2.jpg",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fphinf.pstatic.net%2Ftvcast%2F20250718_167%2FanA6z_17528294390827b6G2_JPEG%2F024D70F1-DD6B-4EE1-93D1-3F5F01B2A9F9.jpg",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fvideo-phinf.pstatic.net%2F20250711_262%2F1752233350943vStS1_JPEG%2FL9fR55j6IG_03.jpg",
+      "https://pup-review-phinf.pstatic.net/MjAyNTA3MjJfMTk0/MDAxNzUzMTU0ODY4MTQz.IB1e6X0FeI9FEWh-fsQq1ndIR03wWAQE7JDso5MsYRUg.-CJVyquDtAVcvJNp71LcUMwpFosTeTiQ9azQsZfewZwg.JPEG/20250722_122532.heic.jpg?type=w560_sharpen",
+      "https://pup-review-phinf.pstatic.net/MjAyNTA3MjFfODgg/MDAxNzUzMDk0Mjc5ODc2.s-Crj6BovfXJL8csj3pzQR184N7OtD-COf2TIIlrlGcg.Lt0kHVUOqrQCWHyCKmWD_RijHOeWeiALr6LTLy3_RAAg.JPEG/9F4B1A86-A7E5-48A2-855D-FEBD0AF6B2BD.jpeg?type=w560_sharpen",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA2MjNfMjA1%2FMDAxNzUwNjY4ODY3NjI2.ef1Myrn3JG9vs3F4gFXOCn9qZQ7YkPFJR3JnIR2dnYgg.MTcYL_VGtEpIw5Ukz9kZH6xZoy9BqHjZhix1awnqXzYg.JPEG%2FIMG%25A3%25DF6533.JPG",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA2MjZfMTcx%2FMDAxNzUwOTQ2MDI4Nzc0.QaiO8QvyHi68zYbzcp8L02FtWFgTh18Ar9TVjIxtyIQg.JEB5HXzBPp8b7gvYvHV2aXdHamq0b8ujzZyoXRJ57HQg.JPEG%2FKakaoTalk_20250626_215409124_02.jpg",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTA2MTFfMjQx%2FMDAxNzQ5NjIxMjY0MzAx.ZJm8wqgYy4vSd-A5EqPYNMxxqcCVNIGuykENXf0PejAg.mg8U3GXu7x01bt3wSUJxMM2_gz4IRJ_DVZD0OKc8aywg.JPEG%2Fbatch_KakaoTalk_20250611_145050827_02.jpg"
+    ],
+    "inner_image_list": [
+      "https://pup-review-phinf.pstatic.net/MjAyNTA3MTNfMTQg/MDAxNzUyMzc2NDI5NjY3.XTNIyYcbdj4jHpvzBmU_gvvQUTstwvlUvyyusYLzfEwg.eVD-HG-QRVJHCBRDLu18rVwPL156Xygx-Sjj8zrX_-Ug.JPEG/20250713_114357.jpg.jpg?type=w560_sharpen",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MjlfMTI0%2FMDAxNzQ1OTE3NDYxMTI4.N6co0741LU8BHrJ0e5LDTtIjEJaSD3SRaT4b8ujNMrIg.hZTA3KR2BUhx1SKxIqawDdwYrQs018CWgMZCOLEvxR4g.JPEG%2FIMG_2261.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MjBfMTE5%2FMDAxNzUwMzgxOTk4Njgy.p9DGZlj-Yjgxj6JhLUIONT8-ucuPBX7xlnicmaNdJisg.qBP9LKe8-TPUFU88BpCgsRczy9tDu7CQgbKofkfhUIIg.JPEG%2FIMG%EF%BC%BF0777.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MjBfMjI2%2FMDAxNzUwMzgyMDAwNjc5.EDRf05zyQjHlIlR_Y5Sxd38j47MpuKPb8GLasxoE1Kgg.BDEGDZOgZWgGr1fVSuVggK5DeMVtHvTp0io-tmq6MYMg.JPEG%2FIMG%EF%BC%BF0745.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjFfNjgg%2FMDAxNzQ3ODA2NzY3MjE0.2NnJdvMEjpko1RJZ67PH7Gm26cLinnh6bM2TaleKkzAg.8ufSkWtiiLQxEKps7xT83OHHgF31XDnOMeXIS9wczxIg.JPEG%2FIMG_0989.jpg%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjJfOTYg%2FMDAxNzQ3ODk3MDExMDAx.1wDv18aQ9iWxE3_9Ghun6Zp5vEgIsXUrLoDbXr8Bbfog.38caVxIoSYLzP01GLHX9_EvtA3dqu4_qiFdfwO4FqGwg.JPEG%2FIMG%EF%BC%BF7723.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjFfNTMg%2FMDAxNzQ3ODA2NzY4MDE4.yCgtkNTZ0IeO8vXGE6SlJIFz6oZrcQ4S6zsKcPJMj3Mg.My9wqxRtS5H3k1ACf39wuNun6OTYzsf5Tz0au7xKSZYg.JPEG%2FIMG_0991.jpg%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MDVfMjQ1%2FMDAxNzQ2NDI3MDc5NDA3.VlWbculH0FmlEpbnfTb5qxaaKSD7QqzNAPLbvz8ddVsg.4uO47Ylr-ImNpOrM_5STezh9pPAcAxWVWj5_dfhIakYg.JPEG%2Foutput_1470188169.jpg%2F1536x2048",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MDlfMTYg%2FMDAxNzQ0MTY2NTY2NjY0.S95bJFPB64l9YU3c4FevJhNV3_NHG509TYIZvly-adIg.9zP62bqGFRdebWuzUHRMKPyXIXF27jIBlrUHXsgbb9wg.JPEG%2FKakaoTalk_20250320_113646448_06.jpg%2F2250x3000",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MDlfMTY2%2FMDAxNzQ0MTY2NTc2ODU2.zQQJutfIDW7PbJfabMc6d604HDyQRuxRhT59FQUFlmsg._FzILtJLIRh2tj-VOV2RKjdy6VAcORCEiXHuijpTaPAg.JPEG%2FKakaoTalk_20250320_113646448_09.jpg%2F2160x2880"
+    ],
+    "outer_image_list": [
+      "https://pup-review-phinf.pstatic.net/MjAyNTA3MTNfMTQg/MDAxNzUyMzc2NDI5NjY3.XTNIyYcbdj4jHpvzBmU_gvvQUTstwvlUvyyusYLzfEwg.eVD-HG-QRVJHCBRDLu18rVwPL156Xygx-Sjj8zrX_-Ug.JPEG/20250713_114357.jpg.jpg?type=w560_sharpen",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MjlfMTI0%2FMDAxNzQ1OTE3NDYxMTI4.N6co0741LU8BHrJ0e5LDTtIjEJaSD3SRaT4b8ujNMrIg.hZTA3KR2BUhx1SKxIqawDdwYrQs018CWgMZCOLEvxR4g.JPEG%2FIMG_2261.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MjBfMTE5%2FMDAxNzUwMzgxOTk4Njgy.p9DGZlj-Yjgxj6JhLUIONT8-ucuPBX7xlnicmaNdJisg.qBP9LKe8-TPUFU88BpCgsRczy9tDu7CQgbKofkfhUIIg.JPEG%2FIMG%EF%BC%BF0777.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MjBfMjI2%2FMDAxNzUwMzgyMDAwNjc5.EDRf05zyQjHlIlR_Y5Sxd38j47MpuKPb8GLasxoE1Kgg.BDEGDZOgZWgGr1fVSuVggK5DeMVtHvTp0io-tmq6MYMg.JPEG%2FIMG%EF%BC%BF0745.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjFfNjgg%2FMDAxNzQ3ODA2NzY3MjE0.2NnJdvMEjpko1RJZ67PH7Gm26cLinnh6bM2TaleKkzAg.8ufSkWtiiLQxEKps7xT83OHHgF31XDnOMeXIS9wczxIg.JPEG%2FIMG_0989.jpg%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjJfOTYg%2FMDAxNzQ3ODk3MDExMDAx.1wDv18aQ9iWxE3_9Ghun6Zp5vEgIsXUrLoDbXr8Bbfog.38caVxIoSYLzP01GLHX9_EvtA3dqu4_qiFdfwO4FqGwg.JPEG%2FIMG%EF%BC%BF7723.JPG%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjFfNTMg%2FMDAxNzQ3ODA2NzY4MDE4.yCgtkNTZ0IeO8vXGE6SlJIFz6oZrcQ4S6zsKcPJMj3Mg.My9wqxRtS5H3k1ACf39wuNun6OTYzsf5Tz0au7xKSZYg.JPEG%2FIMG_0991.jpg%2F900x1200",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MDVfMjQ1%2FMDAxNzQ2NDI3MDc5NDA3.VlWbculH0FmlEpbnfTb5qxaaKSD7QqzNAPLbvz8ddVsg.4uO47Ylr-ImNpOrM_5STezh9pPAcAxWVWj5_dfhIakYg.JPEG%2Foutput_1470188169.jpg%2F1536x2048",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MDlfMTYg%2FMDAxNzQ0MTY2NTY2NjY0.S95bJFPB64l9YU3c4FevJhNV3_NHG509TYIZvly-adIg.9zP62bqGFRdebWuzUHRMKPyXIXF27jIBlrUHXsgbb9wg.JPEG%2FKakaoTalk_20250320_113646448_06.jpg%2F2250x3000",
+      "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MDlfMTY2%2FMDAxNzQ0MTY2NTc2ODU2.zQQJutfIDW7PbJfabMc6d604HDyQRuxRhT59FQUFlmsg._FzILtJLIRh2tj-VOV2RKjdy6VAcORCEiXHuijpTaPAg.JPEG%2FKakaoTalk_20250320_113646448_09.jpg%2F2160x2880"
+    ],
+    "review_category": {
+      "음식이 맛있어요": 2257,
+      "고기 질이 좋아요": 799,
+      "매장이 넓어요": 721,
+      "양이 많아요": 471,
+      "특별한 메뉴가 있어요": 418
+    },
+    "review_list": [
+      {
+        "date": "2025-07-21",
+        "comment": "3대 족발은 거짓이 아닙니다 진짜 맛있어요 족발 티슈로 감싸서 들고 끝까지 뜯었어요 너무 맛있어요"
+      },
+      {
+        "date": "2025-07-21",
+        "comment": "족발이 너무 맛있어요!! 친구들 만나기 조아요~ 막국수도 존맛~"
+      },
+      {
+        "date": "2025-07-20",
+        "comment": "시청에서 이보다 맛있는 족발 못봤어요 잘먹고갑니다"
+      },
+      {
+        "date": "2025-07-20",
+        "comment": "향세트 대자로 셋이서 먹었어요. 야들야들 맛있고 기본 만둣국도 맛있어요."
+      },
+      {
+        "date": "2025-07-20",
+        "comment": "무조건 반반족발 시켜서 두가지 다 먹는게 최고!! 두개 번갈아가면서 먹으면 진짜ㅠㅠ 술이 술술 들어가요!! 다음엔 보쌈도 먹어보고 싶어용"
+      },
+      {
+        "date": "2025-07-18",
+        "comment": "족발하고 냉족 같이 주문해서 먹었어요, 메뉴가 다 맛있어요~ 맛있고 배부르게 먹었어요. 식당 내부도 시원해서 습한 여름에 쾌적한 환경에서 잘먹었습니다!"
+      },
+      {
+        "date": "2025-07-18",
+        "comment": "너무 맛있어서 한달 만에 또 왔어요 비오는 날에도 역시 .."
+      },
+      {
+        "date": "2025-07-18",
+        "comment": "너무 맛있어요! 족발 맛집"
+      },
+      {
+        "date": "2025-07-18",
+        "comment": "주기적으로 방문해줘야하는 곳 ㅋ 너무 맛있어요"
+      },
+      {
+        "date": "2025-07-18",
+        "comment": "보쌈 너무너무 맛있어요 :)"
+      }
+    ],
+    "instagram_post_count": null,
+    "instagram_follower_count": null,
+    "kakao_score": 3.9,
+    "kakao_review_count": 337,
+    "kakao_taste_score": 94,
+    "kakao_value_score": 16,
+    "kakao_kindness_score": 16,
+    "kakao_mood_score": 13,
+    "kakao_parking_score": 1,
+    "pos_score": 3.0,
+    "pos_reason": "역에서 도보 15분 이내",
+    "top_cat": "맛집",
+    "sub_cat": "족발",
+    "cat_reason": "매장 이름, 네이버 카테고리, 메뉴 정보, 리뷰 정보에서 '족발'이 핵심 키워드로 반복적으로 나타나며, 이는 '맛집' 카테고리의 '족발' 하위 카테고리에 해당합니다.",
+    "cat_score": 3.0,
+    "inn_score": 3.0,
+    "inn_reason": "제공된 이미지들을 통해 매장 내부를 확인했을 때, 특정 컨셉(예: 캠핑, 한옥, 공장 개조형)이나 감각적인 인테리어는 보이지 않습니다. 하지만 전반적으로 나무 톤의 마감재와 통일된 디자인의 테이블 및 의자가 배치되어 있으며, 조명이 밝아 깔끔하고 정돈된 분위기를 연출하고 있습니다. 이는 '특정 컨셉 없는 통일된 톤의 인테리어(조명이 전체적으로 밝은 매장)'에 해당하여 3점을 부여합니다.",
+    "inn_reason_img": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MjlfMTI0%2FMDAxNzQ1OTE3NDYxMTI4.N6co0741LU8BHrJ0e5LDTtIjEJaSD3SRaT4b8ujNMrIg.hZTA3KR2BUhx1SKxIqawDdwYrQs018CWgMZCOLEvxR4g.JPEG%2FIMG_2261.JPG%2F900x1200",
+    "seat_score": 0.5,
+    "seat_reason": "제공된 이미지(11, 12, 15, 16, 17, 18)에서 매장 내부의 좌석들을 확인했을 때, 여러 줄로 배치된 테이블들이 보이며, 각 테이블은 최소 4인 이상 수용 가능해 보입니다. 전체적으로 보이는 좌석 수를 미루어 보아 30석을 초과할 것으로 판단됩니다. 따라서 2차 검수 조건에 따라 0.5점이 부여됩니다.",
+    "seat_reason_img": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjJfOTYg%2FMDAxNzQ3ODk3MDExMDAx.1wDv18aQ9iWxE3_9Ghun6Zp5vEgIsXUrLoDbXr8Bbfog.38caVxIoSYLzP01GLHX9_EvtA3dqu4_qiFdfwO4FqGwg.JPEG%2FIMG%EF%BC%BF7723.JPG%2F900x1200",
+    "img_score": 3.5,
+    "add_items": [
+        {
+            "item": "TV 맛집 방영매장",
+            "score": 0.5,
+            "selected": true,
+            "reason": "검색 결과, 만족오향족발은 KBS2 굿모닝대한민국 (12.02.01), KBS2 생생정보통 (12.03.19), Y STAR 식신로드1 (12.03.24), KBS2 VJ특공대 (13.03.08) 등 다수의 TV 프로그램에 맛집으로 방영된 이력이 확인됩니다. [4]"
+        },
+        {
+            "item": "미쉐린 가이드 등재",
+            "score": 0.5,
+            "selected": true,
+            "reason": "수집 데이터에서 미쉐린 가이드 등재 여부를 찾았습니다."
+        },
+        {
+            "item": "블로그 리뷰 300개",
+            "score": 0.3,
+            "selected": true,
+            "reason": "수집 데이터에서 블로그 리뷰 수가 4317개 입니다."
+        }
+    ],
+    "add_score": 1.3,
+    "tot_score": 4.5
+}
