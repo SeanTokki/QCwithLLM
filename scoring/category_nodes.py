@@ -47,7 +47,7 @@ async def tool_checker_node(state: GraphState):
         model="gemini-2.5-flash",
         temperature=0.2,
         thinking_budget=1024,
-    ).bind_tools(tools, tool_choice="any")
+    ).bind_tools(tools)
     
     user_message = state.first_user_prompt
     response = await llm.ainvoke(state.messages + [user_message])
