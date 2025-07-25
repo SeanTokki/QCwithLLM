@@ -14,27 +14,6 @@ from scoring.position_scoring import get_position_result
 from scoring.category_graph import build_graph
 from scoring.schema import *
 
-class FullResult(BaseModel):
-    naver_id: int
-    name: str
-    pos_score: float
-    pos_reason: str
-    top_cat: str
-    sub_cat: str
-    cat_reason: str
-    cat_score: float
-    inn_score: float
-    inn_reason: str
-    inn_reason_img: Optional[str]
-    seat_score: float
-    seat_reason: str
-    seat_reason_img: Optional[str]
-    img_score: float
-    add_items: List[AdditionalItem]
-    add_score: float
-    tot_score: float
-    
-
 async def run_full_pipeline(graph, store_data):
     tasks = {
         "category_result": lambda: get_category_result(graph, store_data),

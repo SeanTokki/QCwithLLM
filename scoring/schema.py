@@ -59,3 +59,23 @@ class PositionResult(BaseModel):
     name: str = Field(description="매장 이름 (입력과 동일)")
     score: float = Field(description="위치 점수")
     reason: str = Field(description="위치 점수 선정의 이유")
+
+class FullResult(BaseModel):
+    naver_id: int
+    name: str
+    pos_score: float
+    pos_reason: str
+    top_cat: str
+    sub_cat: str
+    cat_reason: str
+    cat_score: float
+    inn_score: float
+    inn_reason: str
+    inn_reason_img: Optional[str]
+    seat_score: float
+    seat_reason: str
+    seat_reason_img: Optional[str]
+    img_score: float
+    add_items: List[AdditionalItem]
+    add_score: float
+    tot_score: float
