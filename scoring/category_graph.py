@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.state import CompiledStateGraph
 
-from scoring.schema import *
+from schema import *
 from scoring.category_nodes import *
 
 def build_graph():

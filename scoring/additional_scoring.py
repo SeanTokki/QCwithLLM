@@ -3,7 +3,7 @@ from google.ai.generativelanguage_v1beta.types import Tool as GenAITool
 from langchain.schema.runnable import RunnableLambda
 import json
 
-from scoring.schema import *
+from schema import *
 
 async def get_additional_result(store_data: Dict[str, Any]) -> Any:
     # 추가 점수 부여 규칙 불러오기

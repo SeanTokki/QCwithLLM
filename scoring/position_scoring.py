@@ -2,7 +2,7 @@ from shapely.geometry import Point, Polygon
 from shapely import wkt
 import pandas as pd
 
-from scoring.schema import *
+from schema import *
 
 async def load_polygons(file_path: str, name_col: str, polygon_col: str) -> Dict[str, Polygon]:
     polygons = {}

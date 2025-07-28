@@ -12,7 +12,7 @@ from scoring.image_scoring import get_image_result
 from scoring.additional_scoring import get_additional_result
 from scoring.position_scoring import get_position_result
 from scoring.category_graph import build_graph
-from scoring.schema import *
+from schema import *
 
 async def run_full_pipeline(graph, store_data):
     tasks = {

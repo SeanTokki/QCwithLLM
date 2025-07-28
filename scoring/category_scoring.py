@@ -1,7 +1,7 @@
 from langgraph.graph.state import CompiledStateGraph
 
 from scoring.category_graph import run_graph
-from scoring.schema import *
+from schema import *
 
 async def get_category_result(graph: CompiledStateGraph, store_data: Dict[str, Any]) -> Optional[CategoryResult]:
     try:

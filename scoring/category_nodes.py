@@ -4,7 +4,7 @@ from langchain_core.messages import ToolMessage
 import chromadb
 import json
 
-from scoring.schema import *
+from schema import *
 from utils.build_store_vector_db import build_plain_text
 
 # LLM에게 전달할 더미 유사 매장 검색 도구
