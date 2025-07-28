@@ -38,12 +38,15 @@ async def scoring_task(task_id: str, naver_id: str, graph: CompiledStateGraph):
     # 진행률을 증가시키는 비동기 함수
     async def increase_progress():
         progress = 0
-        # 1초마다 진행률 증가 (최대 95%까지)
+        delta = 10
         while not done.is_set() and progress < 95:
+            # 1초마다 진행률 증가
             await asyncio.sleep(1)
             if done.is_set():
                 break
-            progress += 1
+            progress += delta
+            # 진행률 증가량 감소 (약 30초 후 96% 도달)
+            delta = max(2, delta-1)
             update_task(task_id, progress=progress)
 
         return

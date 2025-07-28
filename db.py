@@ -37,8 +37,9 @@ def new_task(naver_id: str) -> str:
     tid = str(uuid.uuid4())
     
     task = _load("tasks.json")
+    now = datetime.now().isoformat(timespec="seconds")
     task[tid] = {"naver_id": naver_id, "status": "PENDING",
-                 "progress": 0, "updated": datetime.now().isoformat(timespec="seconds")}
+                 "progress": 0, "started": now, "updated": now}
     _save("tasks.json", task)
     
     running = _load("running.json")
