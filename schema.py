@@ -1,6 +1,7 @@
 from typing import List, Dict, Any, Optional, Annotated
 from pydantic import BaseModel, Field
 from langgraph.graph import add_messages
+from langgraph.graph.state import CompiledStateGraph
 
 class ImageResultLLM(BaseModel):
     """매장 이미지 평가 결과(LLM 출력)"""
@@ -61,7 +62,7 @@ class PositionResult(BaseModel):
     reason: str = Field(description="위치 점수 선정의 이유")
 
 class FullResult(BaseModel):
-    naver_id: int
+    naver_id: str
     name: str
     pos_score: float
     pos_reason: str
