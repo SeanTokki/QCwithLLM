@@ -148,10 +148,10 @@
     "cat_score": 3.0,
     "inn_score": 3.0,
     "inn_reason": "제공된 이미지들을 통해 매장 내부를 확인했을 때, 특정 컨셉(예: 캠핑, 한옥, 공장 개조형)이나 감각적인 인테리어는 보이지 않습니다. 하지만 전반적으로 나무 톤의 마감재와 통일된 디자인의 테이블 및 의자가 배치되어 있으며, 조명이 밝아 깔끔하고 정돈된 분위기를 연출하고 있습니다. 이는 '특정 컨셉 없는 통일된 톤의 인테리어(조명이 전체적으로 밝은 매장)'에 해당하여 3점을 부여합니다.",
-    "inn_reason_img": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MjlfMTI0%2FMDAxNzQ1OTE3NDYxMTI4.N6co0741LU8BHrJ0e5LDTtIjEJaSD3SRaT4b8ujNMrIg.hZTA3KR2BUhx1SKxIqawDdwYrQs018CWgMZCOLEvxR4g.JPEG%2FIMG_2261.JPG%2F900x1200",
+    "inn_reason_imgs": ["https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MjlfMTI0%2FMDAxNzQ1OTE3NDYxMTI4.N6co0741LU8BHrJ0e5LDTtIjEJaSD3SRaT4b8ujNMrIg.hZTA3KR2BUhx1SKxIqawDdwYrQs018CWgMZCOLEvxR4g.JPEG%2FIMG_2261.JPG%2F900x1200"],
     "seat_score": 0.5,
     "seat_reason": "제공된 이미지(11, 12, 15, 16, 17, 18)에서 매장 내부의 좌석들을 확인했을 때, 여러 줄로 배치된 테이블들이 보이며, 각 테이블은 최소 4인 이상 수용 가능해 보입니다. 전체적으로 보이는 좌석 수를 미루어 보아 30석을 초과할 것으로 판단됩니다. 따라서 2차 검수 조건에 따라 0.5점이 부여됩니다.",
-    "seat_reason_img": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjJfOTYg%2FMDAxNzQ3ODk3MDExMDAx.1wDv18aQ9iWxE3_9Ghun6Zp5vEgIsXUrLoDbXr8Bbfog.38caVxIoSYLzP01GLHX9_EvtA3dqu4_qiFdfwO4FqGwg.JPEG%2FIMG%EF%BC%BF7723.JPG%2F900x1200",
+    "seat_reason_imgs": ["https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA1MjJfOTYg%2FMDAxNzQ3ODk3MDExMDAx.1wDv18aQ9iWxE3_9Ghun6Zp5vEgIsXUrLoDbXr8Bbfog.38caVxIoSYLzP01GLHX9_EvtA3dqu4_qiFdfwO4FqGwg.JPEG%2FIMG%EF%BC%BF7723.JPG%2F900x1200"],
     "img_score": 3.5,
     "add_items": [
         {

@@ -8,15 +8,15 @@ class ImageResultLLM(BaseModel):
     name: str = Field(description="매장 이름 (입력과 동일)")
     first_score: float = Field(description="1차 점수")
     first_reason: str = Field(description="1차 점수 부여에 대한 근거")
-    first_reason_image: Optional[int] = Field(description="1차 점수 부여에 가장 큰 영향을 미친 이미지 인덱스(1부터 시작)")
+    first_reason_images: List[int] = Field(description="1차 점수 부여에 영향을 미친 이미지 인덱스(1부터 시작)들")
     second_score: float = Field(description="2차 점수")
     second_reason: str = Field(description="2차 점수 부여에 대한 근거")
-    second_reason_image: Optional[int] = Field(description="2차 점수 부여에 가장 큰 영향을 미친 이미지 인덱스(1부터 시작)")
+    second_reason_images: List[int] = Field(description="2차 점수 부여에 영향을 미친 이미지 인덱스(1부터 시작)들")
 
 class ImageResult(ImageResultLLM):
     """매장 이미지 평가 결과"""
-    first_reason_image: Optional[str] = Field(description="1차 점수 부여에 가장 큰 영향을 미친 이미지 url")
-    second_reason_image: Optional[str] = Field(description="2차 점수 부여에 가장 큰 영향을 미친 이미지 url")
+    first_reason_images: List[str] = Field(description="1차 점수 부여에 영향을 미친 이미지 urls")
+    second_reason_images: List[str] = Field(description="2차 점수 부여에 영향을 미친 이미지 urls")
     score: float = Field(description="1차 점수와 2차 점수의 합산")
 
 class ImgGraphState(BaseModel):    
@@ -93,10 +93,10 @@ class FullResult(BaseModel):
     cat_score: float
     inn_score: float
     inn_reason: str
-    inn_reason_img: Optional[str]
+    inn_reason_imgs: List[str]
     seat_score: float
     seat_reason: str
-    seat_reason_img: Optional[str]
+    seat_reason_imgs: List[str]
     img_score: float
     add_items: List[AdditionalItem]
     add_score: float

@@ -25,10 +25,10 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
         name=ex_store_data["name"],
         first_score=ex_store_data["inn_score"],
         first_reason=ex_store_data["inn_reason"],
-        first_reason_image=1,
+        first_reason_images=[1, 4, 5],
         second_score=ex_store_data["seat_score"],
         second_reason=ex_store_data["seat_reason"],
-        second_reason_image=2
+        second_reason_images=[2, 3]
     )
     
     first_user_prompt = """
@@ -36,10 +36,10 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
     - "Scoring Rule"을 참고하여 입력으로 주어진 매장의 이미지를 보고 스코어링을 진행합니다.
     - 주어진 매장 이미지의 인덱스는 1부터 시작합니다.
     - 1차 검수를 진행하여 점수를 부여하고 그 근거를 서술합니다.
-    - 주어진 이미지 중 1차 검수 과정에서 가장 영향을 크게 미친 하나를 골라 근거로써 첨부할 수 있습니다.
+    - 주어진 이미지 중 1차 검수 과정에서 큰 영향을 미친 이미지들을 골라 근거로써 첨부할 수 있습니다.
     - 1차 검수에서 주어진 이미지만으로 판단이 불가능할 경우 0점을 부여하고 그 이유를 서술합니다.
     - 2차 검수를 진행하여 점수를 부여하고 그 근거를 서술합니다.
-    - 주어진 이미지 중 2차 검수 과정에서 가장 영향을 크게 미친 하나를 골라 근거로써 첨부할 수 있습니다.
+    - 주어진 이미지 중 2차 검수 과정에서 큰 영향을 미친 이미지들을 골라 근거로써 첨부할 수 있습니다.
     - 2차 검수에서 주어진 이미지만으로 판단이 불가능할 경우, 검색 도구를 사용하여 추가 정보를 획득할 수 있습니다.
     - 추가 정보를 통해서도 판단이 불가능할 경우 0점을 부여하고 그 이유를 서술합니다.
     - 추가 정보를 통해 점수를 부여했다면 꼭 추가정보 내용과 출처를 근거에 포함시킵니다.
@@ -157,14 +157,14 @@ def postprocessor_node(state: ImgGraphState) -> Dict[str, Any]:
     image_contents = state.image_contents
     
     # 인덱스로 주어진 image 정보를 url string으로 변환
-    if response.first_reason_image and response.first_reason_image <= len(image_contents):
-        first_image_url = image_contents[response.first_reason_image-1]["url"]
-    else:
-        first_image_url = None
-    if response.second_reason_image and response.second_reason_image <= len(image_contents):
-        second_image_url = image_contents[response.second_reason_image-1]["url"]
-    else:
-        second_image_url = None
+    first_image_urls = []
+    for image_url in response.first_reason_images:
+        if image_url <= len(image_contents):
+            first_image_urls.append(image_contents[image_url-1]["url"])
+    second_image_urls = []
+    for image_url in response.second_reason_images:
+        if image_url <= len(image_contents):
+            second_image_urls.append(image_contents[image_url-1]["url"])
     
     # 1차 점수 미부여시 2차 검수 미진행으로 처리
     if response.first_score == 0:
@@ -179,10 +179,10 @@ def postprocessor_node(state: ImgGraphState) -> Dict[str, Any]:
         name=response.name, 
         first_score=response.first_score,
         first_reason=response.first_reason,
-        first_reason_image=first_image_url,
+        first_reason_images=first_image_urls,
         second_score=response.second_score,
         second_reason=response.second_reason,
-        second_reason_image=second_image_url,
+        second_reason_images=second_image_urls,
         score=total_score
     )
     
