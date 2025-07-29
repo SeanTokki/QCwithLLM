@@ -1,20 +1,20 @@
 import asyncio
 
 from scoring.scoring import *
-from scoring.image_scoring import get_image_result
 from scoring.position_scoring import get_position_result
 from schema import *
 
 async def run_full_pipeline(graphs: Dict[str, CompiledStateGraph], store_data: Dict[str, Any]) -> Dict[str, Any]:
     tasks = {
         "category_result": lambda: get_category_result(graphs["cat"], store_data),
-        "image_result": lambda: get_image_result(store_data),
+        "image_result": lambda: get_image_result(graphs["img"], store_data),
         "additional_result": lambda: get_additional_result(graphs["add"], store_data),
         "position_result": lambda: get_position_result(store_data)
     }
     
     result = {k: None for k in tasks.keys()}
     
+    # 실패한 작업들만 최대 3회까지 실행
     for _ in range(3):
         pending = [k for k, v in result.items() if v is None]
         if not pending:

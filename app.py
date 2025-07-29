@@ -8,6 +8,7 @@ from datetime import datetime
 from schema import *
 from scoring.pipeline import run_full_pipeline, make_full_result
 from scoring.graphs.category_graph import build_graph as build_cat_graph
+from scoring.graphs.image_graph import build_graph as build_img_graph
 from scoring.graphs.additional_graph import build_graph as build_add_graph
 from db import *
 
@@ -20,6 +21,7 @@ async def lifespan(app: FastAPI):
     # 앱 시작 시 그래프 빌드
     app.state.graphs = {}
     app.state.graphs["cat"] = await asyncio.to_thread(build_cat_graph)
+    app.state.graphs["img"] = await asyncio.to_thread(build_img_graph)
     app.state.graphs["add"] = await asyncio.to_thread(build_add_graph)
     
     yield

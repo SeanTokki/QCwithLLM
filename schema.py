@@ -19,6 +19,17 @@ class ImageResult(ImageResultLLM):
     second_reason_image: Optional[str] = Field(description="2차 점수 부여에 가장 큰 영향을 미친 이미지 url")
     score: float = Field(description="1차 점수와 2차 점수의 합산")
 
+class ImgGraphState(BaseModel):    
+    """매장 이미지 평가 그래프 상태"""
+    raw_store_data: Dict[str, Any]
+    messages: Annotated[list, add_messages]
+    first_user_prompt: Optional[str] = None
+    second_user_prompt: Optional[str] = None
+    image_contents: List[Dict[str, str]] = Field(default_factory=list)
+    image_result: Union[ImageResult, ImageResultLLM, None] = None
+    branch: Optional[str] = None
+    attempts: int = 1
+
 class CategoryResult(BaseModel):
     """카테고리 매칭 결과"""
     name: str = Field(description="매장 이름 (입력과 동일)")
@@ -31,8 +42,8 @@ class CatGraphState(BaseModel):
     """카테고리 매칭 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
-    first_user_prompt: str
-    second_user_prompt: str
+    first_user_prompt: Optional[str] = None
+    second_user_prompt: Optional[str] = None
     matching_result: Optional[CategoryResult] = None
     branch: Optional[str] = None
     attempts: int = 1
@@ -59,8 +70,8 @@ class AddGraphState(BaseModel):
     """추가 점수 부여 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
-    first_user_prompt: str
-    second_user_prompt: str
+    first_user_prompt: Optional[str] = None
+    second_user_prompt: Optional[str] = None
     additional_result: Union[AdditionalResult, AdditionalResultLLM, None] = None
     branch: Optional[str] = None
     attempts: int = 1
