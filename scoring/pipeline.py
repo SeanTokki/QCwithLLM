@@ -1,16 +1,15 @@
 import asyncio
 
-from scoring.category_scoring import get_category_result
+from scoring.scoring import *
 from scoring.image_scoring import get_image_result
-from scoring.additional_scoring import get_additional_result
 from scoring.position_scoring import get_position_result
 from schema import *
 
-async def run_full_pipeline(graph: CompiledStateGraph, store_data: Dict[str, Any]) -> Dict[str, Any]:
+async def run_full_pipeline(graphs: Dict[str, CompiledStateGraph], store_data: Dict[str, Any]) -> Dict[str, Any]:
     tasks = {
-        "category_result": lambda: get_category_result(graph, store_data),
+        "category_result": lambda: get_category_result(graphs["cat"], store_data),
         "image_result": lambda: get_image_result(store_data),
-        "additional_result": lambda: get_additional_result(store_data),
+        "additional_result": lambda: get_additional_result(graphs["add"], store_data),
         "position_result": lambda: get_position_result(store_data)
     }
     

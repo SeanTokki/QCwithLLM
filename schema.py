@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional, Annotated
+from typing import List, Dict, Any, Optional, Annotated, Union
 from pydantic import BaseModel, Field
 from langgraph.graph import add_messages
 from langgraph.graph.state import CompiledStateGraph
@@ -27,7 +27,7 @@ class CategoryResult(BaseModel):
     score: int= Field(description="매칭된 하위 카테고리의 점수")
     reason: str = Field(description="카테고리 매칭의 판단 근거")
     
-class GraphState(BaseModel):    
+class CatGraphState(BaseModel):    
     """카테고리 매칭 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
@@ -54,7 +54,17 @@ class AdditionalResultLLM(BaseModel):
 class AdditionalResult(AdditionalResultLLM):
     """추가 점수 항목 평가 결과"""
     score: float = Field(description="해당하는 모든 항목에 대한 추가 점수의 합산 결과")
-    
+
+class AddGraphState(BaseModel):    
+    """추가 점수 부여 그래프 상태"""
+    raw_store_data: Dict[str, Any]
+    messages: Annotated[list, add_messages]
+    first_user_prompt: str
+    second_user_prompt: str
+    additional_result: Union[AdditionalResult, AdditionalResultLLM, None] = None
+    branch: Optional[str] = None
+    attempts: int = 1
+
 class PositionResult(BaseModel):
     """위치 점수"""
     name: str = Field(description="매장 이름 (입력과 동일)")

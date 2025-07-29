@@ -41,7 +41,7 @@ def real_similar_partner_search(store_data: str)-> List[Dict]:
 tools = [similar_partner_search]
 
 # 첫번째 LLM을 실행시키는 노드
-async def tool_checker_node(state: GraphState):
+async def tool_checker_node(state: CatGraphState):
     # 첫번째 LLM: 주어진 정보만으로 카테고리 매칭이 가능한지 판단
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
@@ -49,7 +49,7 @@ async def tool_checker_node(state: GraphState):
         thinking_budget=1024,
     ).bind_tools(tools)
     
-    user_message = state.first_user_prompt
+    user_message = {"role": "user", "content": state.first_user_prompt}
     response = await llm.ainvoke(state.messages + [user_message])
     
     # tool call message 존재 여부에 따라 분기
@@ -61,7 +61,7 @@ async def tool_checker_node(state: GraphState):
     return {"messages": [user_message, response], "branch": branch}
 
 # state.messages[-1]을 보고 자동으로 tool을 실행해주는 노드
-def tool_node(state: GraphState):
+def tool_node(state: CatGraphState):
     last_message = state.messages[-1]
     
     outputs = []
@@ -85,7 +85,7 @@ def tool_node(state: GraphState):
     return {"messages": outputs}
 
 # 두번째 LLM을 실행시키는 노드
-async def scorer_node(state: GraphState):
+async def scorer_node(state: CatGraphState):
     # 3회 이상 재시도시 workflow 종료
     if state.attempts > 3:
         return {"matching_result": None, "branch": "too_many_attempts"}
@@ -97,14 +97,14 @@ async def scorer_node(state: GraphState):
         thinking_budget=1024,
     ).with_structured_output(CategoryResult)
     
-    user_message = state.second_user_prompt
+    user_message = {"role": "user", "content": state.second_user_prompt}
     response = await llm.ainvoke(state.messages + [user_message])
     ai_message = {"role": "ai", "content": response.model_dump_json()}
     
     return {"messages": [user_message, ai_message], "matching_result": response, "branch": "success"}
 
 # 카테고리 매칭 결과의 유효성을 체크하는 노드
-def validator_node(state: GraphState):
+def validator_node(state: CatGraphState):
     with open("./data/rules/category_score_rule.json", "r", encoding="utf-8") as f:
         matching_rule = json.load(f)
     
@@ -199,7 +199,7 @@ def save_result(result: CategoryResult, store_data: Dict):
     
     # print("매칭 결과 저장 완료")
 
-def human_node(state: GraphState):
+def human_node(state: CatGraphState):
     if state.ok:
         save_result(state.matching_result, state.raw_store_data)
         return {

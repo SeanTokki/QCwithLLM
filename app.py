@@ -7,7 +7,8 @@ from datetime import datetime
 
 from schema import *
 from scoring.pipeline import run_full_pipeline, make_full_result
-from scoring.category_graph import build_graph
+from scoring.graphs.category_graph import build_graph as build_cat_graph
+from scoring.graphs.additional_graph import build_graph as build_add_graph
 from db import *
 
 @asynccontextmanager
@@ -16,9 +17,11 @@ async def lifespan(app: FastAPI):
     load_dotenv(".env")
     os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 
-    # 메뉴 점수 부여를 위한 그래프 빌드
-    app.state.graph = await asyncio.to_thread(build_graph)
-
+    # 앱 시작 시 그래프 빌드
+    app.state.graphs = {}
+    app.state.graphs["cat"] = await asyncio.to_thread(build_cat_graph)
+    app.state.graphs["add"] = await asyncio.to_thread(build_add_graph)
+    
     yield
     
     # app 종료 후 해야 할 일 있다면 추가
@@ -32,7 +35,7 @@ app = FastAPI(
 
 
 # Scoring 작업을 백그라운드에서 실행하는 함수
-async def scoring_task(task_id: str, naver_id: str, graph: CompiledStateGraph):
+async def scoring_task(task_id: str, naver_id: str, graphs: Dict[str, CompiledStateGraph]):
     done = asyncio.Event()
     
     # 진행률을 증가시키는 비동기 함수
@@ -64,7 +67,7 @@ async def scoring_task(task_id: str, naver_id: str, graph: CompiledStateGraph):
             raise RuntimeError("Store not found")
         
         # 스코어링 파이프라인 실행
-        result = await run_full_pipeline(graph, store)       
+        result = await run_full_pipeline(graphs, store)       
         full_result = make_full_result(naver_id, result)
         if full_result is None:
             raise RuntimeError("Scoring failed, incomplete results")
@@ -106,7 +109,7 @@ async def get_store_score(naver_id: str, response: Response, bg: BackgroundTasks
     # 해당 매장에 대해 진행중인 작업이 없다면 백그라운드 작업으로 점수 계산 시작
     if not task_id:
         task_id = new_task(naver_id)
-        bg.add_task(scoring_task, task_id, naver_id, app.state.graph)
+        bg.add_task(scoring_task, task_id, naver_id, app.state.graphs)
     
     # 점수 계산 작업을 처리 중임을 알림
     response.status_code = 202

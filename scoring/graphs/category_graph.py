@@ -1,11 +1,10 @@
 from langgraph.graph import StateGraph, START, END
-from langgraph.graph.state import CompiledStateGraph
 
 from schema import *
-from scoring.category_nodes import *
+from scoring.nodes.category_nodes import *
 
 def build_graph():
-    workflow = StateGraph(GraphState)
+    workflow = StateGraph(CatGraphState)
     
     workflow.add_node("tool_checker", tool_checker_node)
     workflow.add_node("tools", tool_node)
@@ -128,14 +127,15 @@ async def run_graph(graph: CompiledStateGraph, store_data: Dict[str, Any]) -> Op
     }
     
     # 그래프 실행
-    try:
-        result= await graph.ainvoke(input=inputs)
-    except Exception as e:
-        print(f"[메뉴 점수] 오류 발생: {e}")
-        return None
+    result= await graph.ainvoke(input=inputs)
 
     return result["matching_result"]
 
+def visualize_graph(graph_obj: CompiledStateGraph, file_path: str) -> bytes:
+    g = graph_obj.get_graph()
+    png_bytes = g.draw_mermaid_png(output_file_path=file_path)
+    
+    return png_bytes
     
     
     
