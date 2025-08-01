@@ -25,6 +25,11 @@ def _save(fname: str, data: dict):
 def get_store(naver_id: str) -> Optional[dict]:      
     return _load("stores.json").get(naver_id)
 
+def save_store(naver_id: str, data: dict):
+    d = _load("stores.json")
+    d[naver_id] = data
+    _save("stores.json", d)
+
 def get_score(naver_id: str) -> Optional[dict]:    
     return _load("scores.json").get(naver_id)
 
@@ -33,18 +38,29 @@ def save_score(naver_id: str, data: dict):
     d[naver_id] = data
     _save("scores.json", d)
 
-def new_task(naver_id: str) -> str:
+def new_task(naver_id: str = None, query: str = None) -> Optional[str]:
+    # naver_id나 query 둘 중 하나라도 있어야 함
+    if not naver_id and not query:
+        return None
+    
     tid = str(uuid.uuid4())
     
     task = _load("tasks.json")
     now = datetime.now().isoformat(timespec="seconds")
-    task[tid] = {"naver_id": naver_id, "status": "PENDING",
-                 "progress": 0, "started": now, "updated": now}
+    task[tid] = {
+        "query": query, 
+        "naver_id": naver_id, 
+        "status": "PENDING",
+        "progress": 0, 
+        "started": now, 
+        "updated": now
+    }
     _save("tasks.json", task)
     
-    running = _load("running.json")
-    running[naver_id] = tid
-    _save("running.json", running)
+    if naver_id:
+        add_running_task(naver_id, tid)
+    else:
+        add_running_task(query, tid)
     
     return tid
 
@@ -57,12 +73,16 @@ def update_task(tid: str, **patch: dict):
 def get_task(tid: str) -> Optional[dict]: 
     return _load("tasks.json").get(tid)
 
-def get_running_tid_with_nid(naver_id: str) -> Optional[str]: 
+def get_running_tid(key: str) -> Optional[str]: 
     running = _load("running.json")
-    return running.get(naver_id)
+    return running.get(key)
 
-
-def finish_running_task_with_nid(naver_id: str):
+def add_running_task(key: str, tid: str):
     running = _load("running.json")
-    running.pop(naver_id, None)
+    running[key] = tid
+    _save("running.json", running)
+
+def delete_running_task(key: str):
+    running = _load("running.json")
+    running.pop(key, None)
     _save("running.json", running)

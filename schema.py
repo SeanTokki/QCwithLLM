@@ -83,6 +83,7 @@ class PositionResult(BaseModel):
     reason: str = Field(description="위치 점수 선정의 이유")
 
 class FullResult(BaseModel):
+    """전체 스코어링 결과"""
     naver_id: str
     name: str
     pos_score: float
@@ -101,3 +102,18 @@ class FullResult(BaseModel):
     add_items: List[AdditionalItem]
     add_score: float
     tot_score: float
+    
+class QueryTaskPayload(BaseModel):
+    """POST /tasks 요청의 payload"""
+    query: str
+
+class NaverIDPayload(BaseModel):
+    """POST /internal/callback/nid-found 요청의 payload"""
+    query: str
+    naver_id: Optional[str]
+    need_crawling: bool
+    
+class CrawlCompPayload(BaseModel):
+    """POST /internal/callback/crawl-completed 요청의 payload"""
+    naver_id: str
+    success: bool
