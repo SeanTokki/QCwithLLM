@@ -214,8 +214,12 @@ __marimo__/
 *.xlsx
 
 # Reuired files
-!example_scored_store_data.json
-!additional_score_rule.json
-!category_score_rule.json
-!campus_polygons.csv
-!seoul_hotspots_polygons.csv
+!/data/examples/example_scored_store_data.json
+!/data/rules/additional_score_rule.json
+!/data/rules/category_score_rule.json
+!/data/polygons/campus_polygons.csv
+!/data/polygons/seoul_hotspots_polygons.csv
+!/data/test/running.json
+!/data/test/scores.json
+!/data/test/stores.json
+!/data/test/tasks.json
