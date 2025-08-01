@@ -229,7 +229,7 @@ def get_store_by_id(naver_id: str):
 
 
 # 매장 데이터 저장
-@app.post("/internal/stores/")
+@app.post("/internal/stores")
 def save_store_with_payload(payload: Dict[str, Any]):
     naver_id = payload.get("naver_id")
     
