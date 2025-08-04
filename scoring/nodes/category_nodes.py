@@ -7,7 +7,7 @@ import json
 from schema import *
 from utils.build_store_vector_db import build_plain_text
 
-# LLM에게 전달할 더미 유사 매장 검색 도구
+# LLM에게 전달할 유사 매장 검색 도구
 @tool
 def similar_partner_search()-> List[Dict]:
     """
@@ -19,7 +19,7 @@ def similar_partner_search()-> List[Dict]:
     pass
 
 # 진짜 실행시킬 유사 매장 검색 도구
-def real_similar_partner_search(store_data: str)-> List[Dict]:
+def real_similar_partner_search(store_data: Dict)-> List[Dict]:
     client     = chromadb.PersistentClient(path="temp_chroma_store")
     coll       = client.get_or_create_collection("stores")
     
@@ -37,8 +37,27 @@ def real_similar_partner_search(store_data: str)-> List[Dict]:
     
     return result_list
 
+# LLM에게 전달할 매장 이미지 불러오는 도구
+@tool
+def get_store_images() -> List[Dict]:
+    """
+    매장의 이미지 정보를 불러옵니다.
+
+    Returns:
+        List[Dict]: 매장 이미지 컨텐츠
+    """
+    pass
+
+# 진짜 실행시킬 매장 이미지 불러오는 도구
+def real_get_store_images(image_list: List[str]) -> List[Dict]:
+    contents = [{"type": "text", "text": f"다음은 해당 스코어링 매장에 대한 {len(image_list)}개의 이미지입니다."}]
+    for image_url in image_list:
+        contents.append({"type": "image", "source_type": "url", "url": image_url})
+
+    return contents
+
 # 사용 가능한 tools
-tools = [similar_partner_search]
+tools = [similar_partner_search, get_store_images]
 
 # 프롬프트를 생성하는 노드
 def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
@@ -116,25 +135,31 @@ async def tool_checker_node(state: CatGraphState):
 def tool_node(state: CatGraphState):
     last_message = state.messages[-1]
     
-    outputs = []
+    tool_messages = []
+    human_messages = []
     for tool_call in last_message.tool_calls:
         # similar_partner_search 도구가 호출된 경우 직접 store_data를 전달
         if tool_call["name"] == "similar_partner_search":
             tool_result = real_similar_partner_search(state.raw_store_data)
+            content = json.dumps(tool_result, ensure_ascii=False)
+        # get_store_images 도구가 호출된 경우 직접 store_data["image_list"]를 전달
+        elif tool_call["name"] == "get_store_images":
+            tool_result = real_get_store_images(state.raw_store_data.get("image_list"))
+            content = "이미지를 불러왔습니다."
+            human_messages.append({"role": "user", "content": tool_result})
         else:
             tool_result = tools[tool_call["name"]].invoke(tool_call["args"])
+            content = json.dumps(tool_result, ensure_ascii=False)
 
-    outputs.append(
-        ToolMessage(
-            content=json.dumps(
-                tool_result, ensure_ascii=False
-            ),
-            name=tool_call["name"],
-            tool_call_id=tool_call["id"],
+        tool_messages.append(
+            ToolMessage(
+                content=content,
+                name=tool_call["name"],
+                tool_call_id=tool_call["id"],
+            )
         )
-    )
     
-    return {"messages": outputs}
+    return {"messages": tool_messages + human_messages}
 
 # 두번째 LLM을 실행시키는 노드
 async def scorer_node(state: CatGraphState):

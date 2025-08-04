@@ -43,24 +43,7 @@ def build_graph():
     return workflow.compile()
 
 async def run_graph(graph: CompiledStateGraph, store_data: Dict[str, Any]) -> Optional[CategoryResult]:
-    # 카테고리 매칭 규칙 불러오기
-    with open("./data/rules/category_score_rule.json", "r", encoding="utf-8") as f:
-        matching_rule = json.load(f)
-    
-    # example용 데이터
-    with open("./data/examples/example_scored_store_data.json", "r", encoding="utf-8") as f:
-        ex_store_data = json.load(f)
-    
-    target_keys = ["name", "category", "menu_list", "review_list"]
-    name, category, menu_list, review_list = [store_data.get(k) for k in target_keys]
-    ex_target_keys = ["name", "category", "menu_list", "review_list", "top_cat", "sub_cat", "cat_score", "cat_reason"]
-    ex_name, ex_category, ex_menu_list, ex_review_list, ex_top_cat, ex_sub_cat, ex_score, ex_reason = [ex_store_data.get(k) for k in ex_target_keys]
-    ex_response = json.dumps(
-        {"name": ex_name, "top_category": ex_top_cat, "sub_category": ex_sub_cat, "score": ex_score, "reason": ex_reason},
-        ensure_ascii=False,
-    )
-    
-    # 프롬프트 정의
+    # 시스템 프롬프트
     system_prompt = """
     ## Role
     당신은 카테고리 매칭 전문가입니다.
