@@ -62,54 +62,30 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
     )
     
     # 프롬프트 정의
-    first_user_prompt = f"""
-    ## Instruction
-    - 아래의 "Matching Rule"을 참고하여 입력으로 주어진 매장에 대해 카테고리 매칭 및 스코어링을 진행하기 전 주어진 입력이 충분한지 판단합니다.
-    - 충분하다고 판단되었을 경우, 도구를 호출하지 않습니다.
-    - 충분하지 않다고 판단되었을 경우, 적절한 도구를 호출합니다.
-    - 판단에 대한 근거를 출력으로 제시합니다.
+    with open("./scoring/prompts/category_1.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    first_user_prompt = template.format(
+        matching_rule=matching_rule,
+        name=name,
+        category=category,
+        menu_list=menu_list,
+        review_list=review_list
+    )
     
-    ## Matching Rule
-    {matching_rule}
-    
-    ## Input:
-    - 매장 이름: {name}
-    - 네이버 카테고리: {category}
-    - 메뉴 정보: {menu_list}
-    - 리뷰 정보: {review_list}
-    """   
-    second_user_prompt = f"""
-    ## Instruction
-    - "Matching Rule"을 참고하여 입력으로 주어진 매장에 대해 카테고리 매칭 및 스코어링을 진행합니다.
-    - 먼저, 이 매장을 설명하는 가장 적합한 상위 카테고리를 한 개 선택합니다.
-    - 선택된 상위 카테고리 안에서 "scoring_rules"의 첫번째 규칙을 보고 적절한 하위 카테고리가 있는지 확인합니다.
-    - 만약 적절한 하위 카테고리가 없다고 판단되면 "scoring_rules"의 다음 규칙을 보고 적절한 하위 카테고리가 있는지 확인합니다.
-    - 이렇게 계속 진행하다 "scoring_rules"의 마지막 규칙까지 확인했지만 적절한 하위 카테고리가 없다면 하위 카테고리를 ""(빈 문자열)로 설정합니다.
-    - 상위/하위 카테고리 매칭을 하면서 했던 생각들을 요약해서 판단에 대한 근거를 작성합니다.
-    - 매칭된 하위 카테고리에 해당하는 점수를 부여합니다. 만약 매칭된 하위 카테고리가 없다면 0점을 부여합니다.
-    - 반드시 기준 표에 존재하는 카테고리에만 매칭하세요.
-    
-    ## Matching Rule
-    {matching_rule}
-    
-    ## Examples
-    ### Input: 
-    - 매장 이름: {ex_name}
-    - 네이버 카테고리: {ex_category}
-    - 메뉴 정보: {ex_menu_list}
-    - 리뷰 정보: {ex_review_list}
-    
-    ### Response:
-    {ex_response}
-    
-    ### Input:
-    - 매장 이름: {name}
-    - 네이버 카테고리: {category}
-    - 메뉴 정보: {menu_list}
-    - 리뷰 정보: {review_list}
-    
-    ### Response:
-    """
+    with open("./scoring/prompts/category_2.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    second_user_prompt = template.format(
+        matching_rule=matching_rule,
+        ex_name=ex_name,
+        ex_category=ex_category,
+        ex_menu_list=ex_menu_list,
+        ex_review_list=ex_review_list,
+        ex_response=ex_response,
+        name=name,
+        category=category,
+        menu_list=menu_list,
+        review_list=review_list
+    )
     
     return {
         "first_user_prompt": first_user_prompt, 

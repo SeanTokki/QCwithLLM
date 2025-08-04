@@ -31,46 +31,15 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
         second_reason_images=[2, 3]
     )
     
-    first_user_prompt = """
-    ## Instruction
-    - "Scoring Rule"을 참고하여 입력으로 주어진 매장의 이미지를 보고 스코어링을 진행합니다.
-    - 주어진 매장 이미지의 인덱스는 1부터 시작합니다.
-    - 1차 검수를 진행하여 점수를 부여하고 그 근거를 서술합니다.
-    - 주어진 이미지 중 1차 검수 과정에서 큰 영향을 미친 이미지들을 골라 근거로써 첨부할 수 있습니다.
-    - 1차 검수에서 주어진 이미지만으로 판단이 불가능할 경우 0점을 부여하고 그 이유를 서술합니다.
-    - 2차 검수를 진행하여 점수를 부여하고 그 근거를 서술합니다.
-    - 주어진 이미지 중 2차 검수 과정에서 큰 영향을 미친 이미지들을 골라 근거로써 첨부할 수 있습니다.
-    - 2차 검수에서 주어진 이미지만으로 판단이 불가능할 경우, 검색 도구를 사용하여 추가 정보를 획득할 수 있습니다.
-    - 추가 정보를 통해서도 판단이 불가능할 경우 0점을 부여하고 그 이유를 서술합니다.
-    - 추가 정보를 통해 점수를 부여했다면 꼭 추가정보 내용과 출처를 근거에 포함시킵니다.
-
-    ## Scoring Rule
-    1차 검수: 내부 인테리어
-    - 5점: 감각적 인테리어, 컨셉 인테리어(예시: 캠핑 컨셉으로 텐트와 캠핑의자, 한옥, 공장 개조형) 루프탑, 다락방, 오션뷰
-    - 4점: 전체 특정 컨셉(마법당, 러빈허, 특정 나라 컨셉), 대형 쇼핑몰에 입점한 매장
-    - 3점: 특정 컨셉 없는 통일된 톤의 인테리어(조명이 전체적으로 밝은 매장)
-    - 2점: 특정 컨셉 없고, 통일되지 않는 톤으로 이루어진 인테리어의 매장
-    - 1점: 그 외 매장
-    2차 검수: 좌석 수에 따른 점수 부여
-    - 30석 초과시 0.5점
-    - 30석 이하 10석 초과시 0점
-    - 10석 이하시 -0.5점
-
-    ## Examples
-    ### Input:
-    '{ex_name}' 매장에 대해 평가를 진행하세요.
-
-    ### Response:
-    {ex_response}
-
-    ### Input: 
-    '{name}' 매장에 대해 평가를 진행하세요.
-    """
-    first_user_prompt = first_user_prompt.format(
+    # 프롬프트 정의
+    with open("./scoring/prompts/image.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    first_user_prompt = template.format(
         ex_name=ex_store_data["name"],
         ex_response=ex_response.model_dump(),
         name=state.raw_store_data["name"]
     )
+    
     second_user_prompt = """
     ## Instruction
     - 이전의 응답을 주어진 형식에 맞게 변환합니다.
