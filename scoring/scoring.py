@@ -9,7 +9,7 @@ async def get_category_result(graph: CompiledStateGraph, store_data: Dict[str, A
     try:
         category_result = await run_cat_graph(graph, store_data)
     except Exception as e:
-        print(f"[카테고리 점수] 오류 발생: {e}")
+        print(f"[메뉴 점수] 오류 발생: {e}")
         return None
     
     return category_result

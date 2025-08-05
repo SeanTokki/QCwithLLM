@@ -50,6 +50,7 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
 async def scorer_node(state: AddGraphState) -> Dict[str, Any]:
     # 3회 이상 재시도시 workflow 종료
     if state.attempts > 3:
+        print(f"[추가 점수] 재시도 횟수 초과로 스코어링 불가")
         return {"additional_result": None, "branch": "too_many_attempts"}
     
     # 첫번째 LLM: 추가 점수 항목 확인 및 점수 부여

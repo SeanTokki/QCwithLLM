@@ -8,11 +8,11 @@ from schema import *
 def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
     store_data = state.raw_store_data
     
-    # 첫번째 LLM에 넘길 이미지 contents 생성
-    if store_data["image_list"] or store_data["inner_image_list"]:
-        image_list = store_data["image_list"] + store_data["inner_image_list"]
+    # 첫번째 LLM에 넘길 내부 이미지 contents 생성
+    if store_data["inner_image_list"]:
+        image_list = store_data["inner_image_list"]
     else:
-        print(f"[매장 내부 점수] 이미지가 없어서 스코어링 불가")
+        print(f"[내외부 점수] 이미지가 없어서 스코어링 불가")
         return {"image_result": None, "branch": "no_image"}
     image_contents = []
     for image_url in image_list:
@@ -56,6 +56,7 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
 async def scorer_node(state: ImgGraphState) -> Dict[str, Any]:
     # 3회 이상 재시도시 workflow 종료
     if state.attempts > 3:
+        print(f"[내외부 점수] 재시도 횟수 초과로 스코어링 불가")
         return {"image_result": None, "branch": "too_many_attempts"}
     
     # 첫번째 LLM: 추가 점수 항목 확인 및 점수 부여
