@@ -145,8 +145,11 @@ def tool_node(state: CatGraphState):
         # get_food_images 도구가 호출된 경우 직접 store_data["image_list"]를 전달
         elif tool_call["name"] == "get_food_images":
             tool_result = real_get_food_images(state.raw_store_data.get("food_image_list"))
-            content = "음식 이미지를 불러왔습니다."
-            human_messages.append({"role": "user", "content": tool_result})
+            if len(tool_result) == 1:
+                content = "음식 이미지가 존재하지 않습니다."
+            else:
+                content = "음식 이미지를 불러왔습니다."
+                human_messages.append({"role": "user", "content": tool_result})
         else:
             tool_result = tools[tool_call["name"]].invoke(tool_call["args"])
             content = json.dumps(tool_result, ensure_ascii=False)
