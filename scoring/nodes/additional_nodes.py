@@ -56,7 +56,7 @@ async def scorer_node(state: AddGraphState) -> Dict[str, Any]:
     # 첫번째 LLM: 추가 점수 항목 확인 및 점수 부여
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
-        temperature=0.2,
+        temperature=0,
         thinking_budget=1024,
     )
     

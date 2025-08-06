@@ -116,7 +116,7 @@ async def tool_checker_node(state: CatGraphState):
     # 첫번째 LLM: 주어진 정보만으로 카테고리 매칭이 가능한지 판단
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
-        temperature=0.2,
+        temperature=0,
         thinking_budget=1024,
     ).bind_tools(tools)
     
@@ -174,7 +174,7 @@ async def scorer_node(state: CatGraphState):
     # 두번째 LLM: 카테고리 매칭 및 스코어링을 진행하고 format에 맞게 반환
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
-        temperature=0.2,
+        temperature=0,
         thinking_budget=1024,
     ).with_structured_output(CategoryResult)
     
