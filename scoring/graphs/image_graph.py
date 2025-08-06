@@ -7,6 +7,7 @@ def build_graph():
     workflow = StateGraph(ImgGraphState)
     
     workflow.add_node("prompter", prompter_node)
+    workflow.add_node("captioner", captioner_node)
     workflow.add_node("scorer", scorer_node)
     workflow.add_node("formatter", formatter_node)
     workflow.add_node("validator", validator_node)
@@ -18,9 +19,10 @@ def build_graph():
         lambda s: s.branch,
         {
             "no_image": END,
-            "success": "scorer"
+            "success": "captioner"
         }
     )
+    workflow.add_edge("captioner", "scorer")
     workflow.add_conditional_edges(
         "scorer",
         lambda s: s.branch,

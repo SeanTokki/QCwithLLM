@@ -2,16 +2,17 @@ from typing import List, Dict, Any, Optional, Annotated, Union
 from pydantic import BaseModel, Field
 from langgraph.graph import add_messages
 from langgraph.graph.state import CompiledStateGraph
+from langchain.prompts import PromptTemplate
 
 class ImageResultLLM(BaseModel):
     """매장 이미지 평가 결과(LLM 출력)"""
     name: str = Field(description="매장 이름 (입력과 동일)")
     first_score: float = Field(description="1차 점수")
     first_reason: str = Field(description="1차 점수 부여에 대한 근거")
-    first_reason_images: List[int] = Field(description="1차 점수 부여에 영향을 미친 이미지 인덱스(1부터 시작)들")
+    first_reason_captions: List[int] = Field(description="1차 점수 부여에 영향을 미친 캡션 인덱스들")
     second_score: float = Field(description="2차 점수")
     second_reason: str = Field(description="2차 점수 부여에 대한 근거")
-    second_reason_images: List[int] = Field(description="2차 점수 부여에 영향을 미친 이미지 인덱스(1부터 시작)들")
+    second_reason_captions: List[int] = Field(description="2차 점수 부여에 영향을 미친 캡션 인덱스들")
 
 class ImageResult(ImageResultLLM):
     """매장 이미지 평가 결과"""
@@ -23,9 +24,11 @@ class ImgGraphState(BaseModel):
     """매장 이미지 평가 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
-    first_user_prompt: Optional[str] = None
-    second_user_prompt: Optional[str] = None
+    captioner_user_prompt: Optional[str] = None
+    scorer_user_prompt: Optional[PromptTemplate] = None
+    formatter_user_prompt: Optional[str] = None
     image_contents: List[Dict[str, str]] = Field(default_factory=list)
+    image_captions: List[str] = Field(default_factory=list)
     image_result: Union[ImageResult, ImageResultLLM, None] = None
     branch: Optional[str] = None
     attempts: int = 1
@@ -94,9 +97,11 @@ class FullResult(BaseModel):
     cat_score: float
     inn_score: float
     inn_reason: str
+    inn_reason_caps: List[int]
     inn_reason_imgs: List[str]
     seat_score: float
     seat_reason: str
+    seat_reason_caps: List[int]
     seat_reason_imgs: List[str]
     img_score: float
     add_items: List[AdditionalItem]
