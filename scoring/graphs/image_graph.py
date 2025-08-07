@@ -8,7 +8,8 @@ def build_graph():
     
     workflow.add_node("prompter", prompter_node)
     workflow.add_node("captioner", captioner_node)
-    workflow.add_node("scorer", scorer_node)
+    workflow.add_node("inn_scorer", inn_scorer_node)
+    workflow.add_node("seat_scorer", seat_scorer_node)
     workflow.add_node("formatter", formatter_node)
     workflow.add_node("validator", validator_node)
     workflow.add_node("postprocessor", postprocessor_node)
@@ -22,22 +23,20 @@ def build_graph():
             "success": "captioner"
         }
     )
-    workflow.add_edge("captioner", "scorer")
-    workflow.add_conditional_edges(
-        "scorer",
-        lambda s: s.branch,
-        {
-            "too_many_attempts": END,
-            "success": "formatter"
-        }
-    )
+    workflow.add_edge("captioner", "inn_scorer")
+    workflow.add_edge("captioner", "seat_scorer")
+    workflow.add_edge("inn_scorer", "formatter")
+    workflow.add_edge("seat_scorer", "formatter")
     workflow.add_edge("formatter", "validator")
     workflow.add_conditional_edges(
         "validator",
         lambda s: s.branch,
         {
-            "invalid": "scorer",
-            "valid": "postprocessor"
+            "valid": "postprocessor",
+            "invalid inn": "inn_scorer",
+            "invalid seat": "seat_scorer",
+            "invalid both": "captioner",
+            "too many attempts": END
         }
     )
     workflow.add_edge("postprocessor", END)

@@ -7,25 +7,26 @@ from langchain.prompts import PromptTemplate
 class ImageResultLLM(BaseModel):
     """매장 이미지 평가 결과(LLM 출력)"""
     name: str = Field(description="매장 이름 (입력과 동일)")
-    first_score: float = Field(description="1차 점수")
-    first_reason: str = Field(description="1차 점수 부여에 대한 근거")
-    first_reason_captions: List[int] = Field(description="1차 점수 부여에 영향을 미친 캡션 인덱스들")
-    second_score: float = Field(description="2차 점수")
-    second_reason: str = Field(description="2차 점수 부여에 대한 근거")
-    second_reason_captions: List[int] = Field(description="2차 점수 부여에 영향을 미친 캡션 인덱스들")
+    inn_score: float = Field(description="내부 점수")
+    inn_reason: str = Field(description="내부 점수 부여에 대한 근거")
+    inn_reason_idxs: List[int] = Field(description="내부 점수 부여에 영향을 미친 캡션 인덱스들")
+    seat_score: float = Field(description="좌석수 점수")
+    seat_reason: str = Field(description="좌석수 점수 부여에 대한 근거")
+    seat_reason_idxs: List[int] = Field(description="좌석수 점수 부여에 영향을 미친 이미지 인덱스들")
 
 class ImageResult(ImageResultLLM):
     """매장 이미지 평가 결과"""
-    first_reason_images: List[str] = Field(description="1차 점수 부여에 영향을 미친 이미지 urls")
-    second_reason_images: List[str] = Field(description="2차 점수 부여에 영향을 미친 이미지 urls")
-    score: float = Field(description="1차 점수와 2차 점수의 합산")
+    inn_reason_images: List[str] = Field(description="내부 점수 부여에 영향을 미친 이미지 urls")
+    seat_reason_images: List[str] = Field(description="좌석수 점수 부여에 영향을 미친 이미지 urls")
+    score: float = Field(description="내부 점수와 좌석수 점수의 합산")
 
 class ImgGraphState(BaseModel):    
     """매장 이미지 평가 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
     captioner_user_prompt: Optional[str] = None
-    scorer_user_prompt: Optional[PromptTemplate] = None
+    inn_scorer_user_prompt: Optional[PromptTemplate] = None
+    seat_scorer_user_prompt: Optional[str] = None
     formatter_user_prompt: Optional[str] = None
     image_contents: List[Dict[str, str]] = Field(default_factory=list)
     image_captions: List[str] = Field(default_factory=list)
@@ -97,11 +98,11 @@ class FullResult(BaseModel):
     cat_score: float
     inn_score: float
     inn_reason: str
-    inn_reason_caps: List[int]
+    inn_reason_idxs: List[int]
     inn_reason_imgs: List[str]
     seat_score: float
     seat_reason: str
-    seat_reason_caps: List[int]
+    seat_reason_idxs: List[int]
     seat_reason_imgs: List[str]
     img_score: float
     add_items: List[AdditionalItem]
