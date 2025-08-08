@@ -23,23 +23,28 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
     # example용 가상 매장 데이터 (현재는 few-shot 없이 진행)
     ex_name = "브라운테이블"
     ex_captions = """
-    0: 화이트 벽면과 밝은 우드 톤 가구가 어우러진 전형적인 카페 인테리어다. 4인용 테이블 4개(16석)가 균일하게 배치돼 있으며, 장식으로는 작은 화분 몇 개 정도만 보인다.
-    1: 창가 쪽에는 통유리창이 있어 자연 채광이 들어오지만, 특수 소품이나 독특한 콘셉트 장식은 확인되지 않는다. 2인용 원형 테이블 3개(6석)가 추가로 놓여 있다.
-    2: 카운터 벽면은 민트색 페인트로 포인트를 줬지만, 전체적으로는 우드·화이트 조합이 반복되는 평범한 디자인이다. 바 카운터 앞에 하이 스툴 4석이 보인다.
-    3: 천장에는 레일 조명과 심플한 펜던트 등이 규칙적으로 설치돼 있어 무난한 카페 분위기를 유지한다. 별도 룸이나 파티션 같은 구획은 보이지 않는다.
-    4: 매장 후면의 선반에는 머그잔과 소형 식물만 진열돼 있을 뿐, 테마성 소품·예술 작품은 없다. 사진에 잡힌 좌석은 총 26석으로 일반 중소형 카페 규모다.
+    0: 전반적으로 어두운 톤의 인테리어로, 붉은색 가죽 소파와 어두운 우드 톤의 테이블이 배치되어 있다. 벽면에는 직사각형 형태의 조명이 설치되어 있으며, 천장에는 아치형 구조물에 패턴이 새겨져 있다.
+    1: 붉은 벽돌 기둥과 아치형 구조물이 특징인 레스토랑이다. 짙은 와인색 가죽 소파와 흰색 테이블보가 깔린 테이블이 줄지어 배치되어 있다. 전반적으로 고풍스럽고 차분한 분위기를 연출한다.
+    2: 붉은색 벽과 어두운 갈색의 가죽 소파가 조화를 이루는 실내다. 천장은 아치형으로 디자인되었으며, 금색과 검은색의 모자이크 패턴으로 장식되어 있다. 전반적으로 고풍스러운 분위기를 연출한다.
+    3: 전체적으로 어두운 우드 톤으로 마감된 전형적인 매장이다. 카운터 안쪽으로 주방 공간이 보이며, 특별한 테마나 컨셉은 보이지 않는다.
+    4: 전체적으로 붉은색 계열의 벽과 어두운 갈색의 의자, 테이블이 조화를 이루는 레스토랑이다. 벽면은 붉은색의 물결무늬 패널과 벽돌 아치형 구조물로 이루어져 있으며, 천장은 노란색 계열의 마감재와 간접 조명으로 따뜻한 분위기를 연출한다.
+    5: 카운터는 어두운 우드 톤으로 되어 있으며, 벽에는 소 그림 액자가 걸려 있다. 천장은 금색과 검은색 체크무늬로 장식되어 있어 고급스러운 분위기를 연출한다.
+    6: 어두운 톤의 목재와 붉은색 가죽 의자가 조화를 이루는 레스토랑이다. 천장은 노란색으로 마감되었고, 벽면에는 붉은색 물결무늬 장식이 있어 이국적인 분위기를 연출한다.
+    7: 붉은 벽돌과 붉은색 소파가 조화를 이루는 레스토랑이다. 천장은 금색과 모자이크 타일로 장식되어 있으며, 아치형 통로와 벽등이 고풍스러운 분위기를 더한다.
+    8: 붉은 벽돌과 아치형 구조물, 그리고 천장의 문양 장식이 고풍스러운 분위기를 연출한다. 짙은 갈색의 가죽 소파와 의자가 배치되어 있으며, 테이블은 흰색 상판으로 되어 있다.
+    9: 붉은 벽돌과 붉은색 소파, 그리고 붉은색 벽이 조화를 이루는 매장이다. 천장은 노란색과 모자이크 타일로 장식되어 있으며, 아치형 통로와 벽등이 고풍스러운 분위기를 더한다.
     """
     inn_ex_response = f"""
     name: {ex_name}
-    inn_score: 3.0
-    inn_reason: 캡션 0-4 모두에서 특별한 테마나 독창적 소품 없이 우드·화이트 톤의 일반적인 카페 인테리어만 확인됨.
-    inn_reason_idxs: [0, 1, 2, 3, 4]
+    inn_score: 4.0
+    inn_reason: 캡션 0, 1, 2, 4, 5, 6, 7, 8, 9에서 붉은 벽돌, 아치형 구조물, 붉은색 가죽 소파, 금색/모자이크 천장 등 고풍스럽고 이국적인 분위기가 일관되게 언급되어 특정 컨셉(유럽풍 또는 고전적인 분위기)이 매장 전체에 적용된 것으로 판단됨. 캡션 3에서 '특별한 테마나 컨셉은 보이지 않는다'고 언급되었으나, 다른 다수의 캡션에서 명확한 컨셉 요소가 반복적으로 나타나므로 4점으로 상향 조정함.
+    inn_reason_idxs: [0, 1, 2, 4, 5, 6, 7, 8, 9]
     """
     seat_ex_response = f"""
     name: {ex_name}
-    seat_score: 0.0
-    seat_reason: 이미지 1·4에서 확인된 좌석 합계가 26석으로 11-30석 구간에 해당하여 조정점수 0.
-    seat_reason_idxs: [1, 4]
+    seat_score: 0.5
+    seat_reason: 1, 2, 5, 7, 8, 9에서 확인된 좌석 합계가 32석으로 30석 초과 구간에 해당하여 조정점수 +0.5.
+    seat_reason_idxs: [1, 2, 5, 7, 8, 9]
     """
 
     # with open("./data/examples/example_scored_store_data.json", "r", encoding="utf-8") as f:
@@ -55,11 +60,11 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
     # )
     
     # 프롬프트 정의
-    with open("./scoring/prompts/image_1.txt", "r", encoding="utf-8") as f:
+    with open("./scoring/prompts/image_captioner.txt", "r", encoding="utf-8") as f:
         template = f.read()
     captioner_user_prompt = template
     
-    with open("./scoring/prompts/image_2.txt", "r", encoding="utf-8") as f:
+    with open("./scoring/prompts/image_inn_scorer.txt", "r", encoding="utf-8") as f:
         template = f.read()
     inn_scorer_user_prompt = PromptTemplate.from_template(
         template=template,
@@ -71,7 +76,7 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
         }
     )
     
-    with open("./scoring/prompts/image_3.txt", "r", encoding="utf-8") as f:
+    with open("./scoring/prompts/image_seat_scorer.txt", "r", encoding="utf-8") as f:
         template = f.read()
     seat_scorer_user_prompt = template.format(
         ex_name=ex_name,
@@ -79,10 +84,11 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
         name=state.raw_store_data["name"]
     )
     
-    formatter_user_prompt = """
-    ## Instruction
-    - 이전의 응답을 주어진 형식에 맞게 변환합니다.
-    """
+    with open("./scoring/prompts/image_formatter.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    formatter_user_prompt = PromptTemplate.from_template(
+        template=template
+    )
     
     return {
         "captioner_user_prompt": captioner_user_prompt, 
@@ -103,7 +109,7 @@ async def captioner_node(state: ImgGraphState) -> Dict[str, Any]:
         model="gemini-2.5-flash",
         temperature=0,
         thinking_budget=0,
-        timeout=60,
+        timeout=30,
         max_retries=3
     )
     
@@ -126,7 +132,7 @@ async def captioner_node(state: ImgGraphState) -> Dict[str, Any]:
             except Exception as e:
                 return e
         
-    tasks = [caption_one_image(state, ic) for ic in state.image_contents]
+    tasks = [caption_one_image(state, ic) for ic in state.image_contents[:10]]
     responses = await asyncio.gather(*tasks, return_exceptions=True)
     image_captions = ["없음" if isinstance(r, Exception) else r.content for r in responses]
             
@@ -139,7 +145,7 @@ async def inn_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
         model="gemini-2.5-flash",
         temperature=0,
         thinking_budget=0,
-        timeout=60,
+        timeout=30,
         max_retries=3
     )
     
@@ -157,7 +163,7 @@ async def inn_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
         state.messages + [user_message]
     )
     
-    return {"messages": [user_message, response]}
+    return {"messages": [user_message, response], "inn_response": response.content}
 
 # 좌석수 점수를 부여하는 LLM을 실행시키는 노드
 async def seat_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
@@ -166,13 +172,13 @@ async def seat_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
         model="gemini-2.5-flash",
         temperature=0,
         thinking_budget=0,
-        timeout=60,
+        timeout=30,
         max_retries=3
     )
     
     user_message = {
         "role": "user", 
-        "content": [state.seat_scorer_user_prompt] + state.image_contents
+        "content": [state.seat_scorer_user_prompt] + state.image_contents[:10]
     }
     
     response = await llm.ainvoke(
@@ -180,7 +186,7 @@ async def seat_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
         tools=[GenAITool(google_search={})]
     )
     
-    return {"messages": [user_message, response]}
+    return {"messages": [user_message, response], "seat_response": response.content}
 
 # 형식을 맞춰주는 LLM을 실행시키는 노드
 async def formatter_node(state: ImgGraphState) -> Dict[str, Any]:
@@ -189,15 +195,20 @@ async def formatter_node(state: ImgGraphState) -> Dict[str, Any]:
         model="gemini-2.5-flash",
         temperature=0,
         thinking_budget=0,
-        timeout=60,
+        timeout=30,
         max_retries=3
     ).with_structured_output(ImageResultLLM)
     
-    user_message = {"role": "user", "content": state.formatter_user_prompt}
-    response = await llm.ainvoke(state.messages + [user_message])
-    ai_message = {"role": "ai", "content": response.model_dump_json()}
+    user_message = {
+        "role": "user", 
+        "content": state.formatter_user_prompt.format(
+            inn_response=state.inn_response,
+            seat_response=state.seat_response
+        )
+    }
+    response = await llm.ainvoke([user_message])
     
-    return {"messages": [user_message, ai_message], "image_result": response}
+    return {"image_result": response}
 
 # 이미지 평가 결과의 유효성을 체크하는 노드
 def validator_node(state: ImgGraphState) -> Dict[str, Any]:

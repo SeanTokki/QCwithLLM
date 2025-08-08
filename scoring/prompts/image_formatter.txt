@@ -1,0 +1,8 @@
+## Instruction
+- 다음 LLM 응답을 주어진 형식에 맞게 변환합니다.
+
+## Inner Response
+{inn_response}
+
+## Seat Response
+{seat_response}
