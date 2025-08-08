@@ -215,6 +215,8 @@ __marimo__/
 
 # Reuired files
 !/data/examples/example_scored_store_data.json
+!/data/examples/inn_few_shot_messages.json
+!/data/graphs/graph_image_will_be_saved_here.txt
 !/data/rules/additional_score_rule.json
 !/data/rules/category_score_rule.json
 !/data/polygons/campus_polygons.csv

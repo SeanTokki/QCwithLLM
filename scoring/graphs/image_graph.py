@@ -6,25 +6,25 @@ from scoring.nodes.image_nodes import *
 def build_graph():
     workflow = StateGraph(ImgGraphState)
     
-    workflow.add_node("prompter", prompter_node)
-    workflow.add_node("captioner", captioner_node)
+    workflow.add_node("preprocessor", preprocessor_node)
+    workflow.add_node("dispatcher", dispatcher_node)
     workflow.add_node("inn_scorer", inn_scorer_node)
     workflow.add_node("seat_scorer", seat_scorer_node)
     workflow.add_node("formatter", formatter_node)
     workflow.add_node("validator", validator_node)
     workflow.add_node("postprocessor", postprocessor_node)
     
-    workflow.add_edge(START, "prompter")
+    workflow.add_edge(START, "preprocessor")
     workflow.add_conditional_edges(
-        "prompter",
+        "preprocessor",
         lambda s: s.branch,
         {
             "no_image": END,
-            "success": "captioner"
+            "success": "dispatcher"
         }
     )
-    workflow.add_edge("captioner", "inn_scorer")
-    workflow.add_edge("captioner", "seat_scorer")
+    workflow.add_edge("dispatcher", "inn_scorer")
+    workflow.add_edge("dispatcher", "seat_scorer")
     workflow.add_edge("inn_scorer", "formatter")
     workflow.add_edge("seat_scorer", "formatter")
     workflow.add_edge("formatter", "validator")
@@ -35,7 +35,7 @@ def build_graph():
             "valid": "postprocessor",
             "invalid inn": "inn_scorer",
             "invalid seat": "seat_scorer",
-            "invalid both": "captioner",
+            "invalid both": "dispatcher",
             "too many attempts": END
         }
     )
@@ -45,17 +45,16 @@ def build_graph():
 
 async def run_graph(graph: CompiledStateGraph, store_data: Dict[str, Any]) -> Optional[ImageResult]:
     # 시스템 프롬프트
-    system_prompt = """
-    ## Role
-    당신은 매장 분석 전문가입니다.
-    당신은 특정 매장이 제휴를 맺기 적합한 매장인지 판단하기 위해 점수 기준표에 따라 매장의 이미지를 보고 점수를 부여하는 역할을 맡고 있습니다.
-    차근차근 단계별로 생각하며 지시를 수행하세요.
-    """
+    with open("./scoring/prompts/image_system.txt", "r", encoding="utf-8") as f:
+        system_prompt = f.read()
     
     inputs = {
         "raw_store_data": store_data,
         "messages": [{"role": "system", "content": system_prompt}],
     }
+    
+    # 그래프 이미지 저장
+    visualize_graph(graph, "./data/graphs/image_graph.png")
     
     # 그래프 실행
     result= await graph.ainvoke(input=inputs)

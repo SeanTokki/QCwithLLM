@@ -1,0 +1,27 @@
+[
+    {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "'우살롱 압구정점' 매장에 대한 평가를 해주세요."},
+            {"type": "image", "source_type": "url", "url": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA3MTZfODIg%2FMDAxNzUyNjU3MzE0NjE2.TL9msUpNodgLGQg1glwsUQHVj4JE7lIE6XXR5GSOJdEg.SmM-WZRE-vO-KoJUHszcw-Q3gdnrrHUgulaHNXV6IEIg.JPEG%2FIMG_0696.jpg%2F1365x2048"},
+            {"type": "image", "source_type": "url", "url": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MjBfMTI5%2FMDAxNzUwNDE2MTA4MzQw.hD65A3Ktaz-ltHBq60YYhzeodW9bcd6tYbZS-4fNu7kg.vBgVamrbcW0J0UEp72g7kAOFh6ttH6CJUSyMC2Kn3Icg.JPEG%2F%EC%95%95%EA%B5%AC%EC%A0%95_%ED%95%9C%EC%9A%B0_%EC%9A%B0%EC%82%B4%EB%A1%B1_%EC%82%B4%EC%82%B4%EB%85%B9%EB%8A%94_%EA%B0%95%EB%82%A8_%EC%86%8C%EA%B3%A0%EA%B8%B0_%EB%8D%B0%EC%9D%B4%ED%8A%B8_(50).jpg%2F800x1067"}
+        ]
+    },
+    {
+        "role": "ai",
+        "content": "name: 우살롱 압구정점\ninn_score: 4.0\ninn_reason: 이미지 1의 자갈, 간접 조명, 복도식 구조에서 보이는 절제되고 고급스러운 디자인과 이미지 2의 프라이빗한 다이닝 공간 및 고급 식기류는 일관된 방향성을 보여줍니다. 이러한 요소들을 종합하면, 이곳은 '프라이빗 룸을 갖춘 고급 다이닝'이라는 명확하고 전체적인 특정 컨셉을 가지고 있으며, 이는 평가 기준 4점에 해당합니다.\ninn_reason_idxs: [1, 2]"
+    },
+    {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "'Hwi ya' 매장에 대한 평가를 해주세요."},
+            {"type": "image", "source_type": "url", "url": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MzBfMjA5%2FMDAxNzUxMjg3NzAzNzcx.z0vHy8PggwKWk4zuFRxeod7tECR31dhwDTZYmzK-Qo0g.c_FeiY3wyV30yzy53-LyyuVOXHALHQSuGqzbKvAFN8Ig.PNG%2F16.png%2F1450x1933"},
+            {"type": "image", "source_type": "url", "url": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA2MDhfMjUg%2FMDAxNzQ5Mzc4ODY1MjYx.HcTrV8zGUpyv_4WsnY9H50Y9iE9rt96pehr304FWEUwg.1UrTFL_2DB8v57fxeThmtryRzMR6onad5Jt-MoEpjakg.JPEG%2F900%EF%BC%BF1749378778651.jpg%2F900x900"},
+            {"type": "image", "source_type": "url", "url": "https://search.pstatic.net/common/?autoRotate=true&type=w560_sharpen&src=https%3A%2F%2Fblogfiles.pstatic.net%2FMjAyNTA0MDZfNzQg%2FMDAxNzQzOTE1ODcwNDM2.fs_Jdqu10ipZKfrEQAV_vdKr7P3EVKMN7aOmHAeueR0g.-9rKncsE-LRkLhJ5CCvd8hLf_HbLYJ7dM-ZzPaKdYGEg.JPEG%2FIMG_8998.jpg%2F900x1125"}
+        ]
+    },
+    {
+        "role": "ai",
+        "content": "name: Hwi ya\ninn_score: 2.0\ninn_reason: 이미지 1, 2에서 공통적으로 확인되듯이, 매장 전반의 조도가 매우 낮아 공간이 전체적으로 어둡고 침침한 인상을 줍니다. 특히 이미지 3의 밝은 네온사인 조명은 이러한 어두운 배경과 조화를 이루지 못하고 혼자 겉돌아 '통일되지 않는 톤'을 형성합니다. 이처럼 명확한 컨셉이 부재한 상태에서 어두운 조명을 효과적으로 사용하지 못해 일관성 없는 분위기를 만든 점은 평가 기준 2점에 해당합니다.\ninn_reason_idxs: [1, 2, 3]"
+    }
+]

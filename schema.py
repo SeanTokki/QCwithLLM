@@ -9,7 +9,7 @@ class ImageResultLLM(BaseModel):
     name: str = Field(description="매장 이름 (입력과 동일)")
     inn_score: float = Field(description="내부 점수")
     inn_reason: str = Field(description="내부 점수 부여에 대한 근거")
-    inn_reason_idxs: List[int] = Field(description="내부 점수 부여에 영향을 미친 캡션 인덱스들")
+    inn_reason_idxs: List[int] = Field(description="내부 점수 부여에 영향을 미친 이미지 인덱스들")
     seat_score: float = Field(description="좌석수 점수")
     seat_reason: str = Field(description="좌석수 점수 부여에 대한 근거")
     seat_reason_idxs: List[int] = Field(description="좌석수 점수 부여에 영향을 미친 이미지 인덱스들")
@@ -24,12 +24,7 @@ class ImgGraphState(BaseModel):
     """매장 이미지 평가 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
-    captioner_user_prompt: Optional[str] = None
-    inn_scorer_user_prompt: Optional[PromptTemplate] = None
-    seat_scorer_user_prompt: Optional[str] = None
-    formatter_user_prompt: Optional[PromptTemplate] = None
     image_contents: List[Dict[str, str]] = Field(default_factory=list)
-    image_captions: List[str] = Field(default_factory=list)
     inn_response: Optional[str | list[str | dict]] = None
     seat_response: Optional[str | list[str | dict]] = None
     image_result: Union[ImageResult, ImageResultLLM, None] = None

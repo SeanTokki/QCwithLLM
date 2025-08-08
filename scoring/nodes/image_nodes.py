@@ -6,11 +6,11 @@ import asyncio
 
 from schema import *
 
-# 프롬프트를 생성하는 노드
-def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
+# 전처리 노드
+def preprocessor_node(state: ImgGraphState) -> Dict[str, Any]:
     store_data = state.raw_store_data
     
-    # 첫번째 LLM에 넘길 내부 이미지 contents 생성
+    # LLM에 넘길 내부 이미지 contents 생성
     if store_data["inner_image_list"]:
         image_list = store_data["inner_image_list"]
     else:
@@ -20,123 +20,15 @@ def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
     for image_url in image_list:
         image_contents.append({"type": "image", "source_type": "url", "url": image_url})
     
-    # example용 가상 매장 데이터 (현재는 few-shot 없이 진행)
-    ex_name = "브라운테이블"
-    ex_captions = """
-    0: 전반적으로 어두운 톤의 인테리어로, 붉은색 가죽 소파와 어두운 우드 톤의 테이블이 배치되어 있다. 벽면에는 직사각형 형태의 조명이 설치되어 있으며, 천장에는 아치형 구조물에 패턴이 새겨져 있다.
-    1: 붉은 벽돌 기둥과 아치형 구조물이 특징인 레스토랑이다. 짙은 와인색 가죽 소파와 흰색 테이블보가 깔린 테이블이 줄지어 배치되어 있다. 전반적으로 고풍스럽고 차분한 분위기를 연출한다.
-    2: 붉은색 벽과 어두운 갈색의 가죽 소파가 조화를 이루는 실내다. 천장은 아치형으로 디자인되었으며, 금색과 검은색의 모자이크 패턴으로 장식되어 있다. 전반적으로 고풍스러운 분위기를 연출한다.
-    3: 전체적으로 어두운 우드 톤으로 마감된 전형적인 매장이다. 카운터 안쪽으로 주방 공간이 보이며, 특별한 테마나 컨셉은 보이지 않는다.
-    4: 전체적으로 붉은색 계열의 벽과 어두운 갈색의 의자, 테이블이 조화를 이루는 레스토랑이다. 벽면은 붉은색의 물결무늬 패널과 벽돌 아치형 구조물로 이루어져 있으며, 천장은 노란색 계열의 마감재와 간접 조명으로 따뜻한 분위기를 연출한다.
-    5: 카운터는 어두운 우드 톤으로 되어 있으며, 벽에는 소 그림 액자가 걸려 있다. 천장은 금색과 검은색 체크무늬로 장식되어 있어 고급스러운 분위기를 연출한다.
-    6: 어두운 톤의 목재와 붉은색 가죽 의자가 조화를 이루는 레스토랑이다. 천장은 노란색으로 마감되었고, 벽면에는 붉은색 물결무늬 장식이 있어 이국적인 분위기를 연출한다.
-    7: 붉은 벽돌과 붉은색 소파가 조화를 이루는 레스토랑이다. 천장은 금색과 모자이크 타일로 장식되어 있으며, 아치형 통로와 벽등이 고풍스러운 분위기를 더한다.
-    8: 붉은 벽돌과 아치형 구조물, 그리고 천장의 문양 장식이 고풍스러운 분위기를 연출한다. 짙은 갈색의 가죽 소파와 의자가 배치되어 있으며, 테이블은 흰색 상판으로 되어 있다.
-    9: 붉은 벽돌과 붉은색 소파, 그리고 붉은색 벽이 조화를 이루는 매장이다. 천장은 노란색과 모자이크 타일로 장식되어 있으며, 아치형 통로와 벽등이 고풍스러운 분위기를 더한다.
-    """
-    inn_ex_response = f"""
-    name: {ex_name}
-    inn_score: 4.0
-    inn_reason: 캡션 0, 1, 2, 4, 5, 6, 7, 8, 9에서 붉은 벽돌, 아치형 구조물, 붉은색 가죽 소파, 금색/모자이크 천장 등 고풍스럽고 이국적인 분위기가 일관되게 언급되어 특정 컨셉(유럽풍 또는 고전적인 분위기)이 매장 전체에 적용된 것으로 판단됨. 캡션 3에서 '특별한 테마나 컨셉은 보이지 않는다'고 언급되었으나, 다른 다수의 캡션에서 명확한 컨셉 요소가 반복적으로 나타나므로 4점으로 상향 조정함.
-    inn_reason_idxs: [0, 1, 2, 4, 5, 6, 7, 8, 9]
-    """
-    seat_ex_response = f"""
-    name: {ex_name}
-    seat_score: 0.5
-    seat_reason: 1, 2, 5, 7, 8, 9에서 확인된 좌석 합계가 32석으로 30석 초과 구간에 해당하여 조정점수 +0.5.
-    seat_reason_idxs: [1, 2, 5, 7, 8, 9]
-    """
-
-    # with open("./data/examples/example_scored_store_data.json", "r", encoding="utf-8") as f:
-    #     ex_store_data = json.load(f)
-    # ex_response = ImageResultLLM(
-    #     name=ex_store_data["name"],
-    #     first_score=ex_store_data["inn_score"],
-    #     first_reason=ex_store_data["inn_reason"],
-    #     first_reason_captions=ex_store_data["inn_reason_caps"],
-    #     second_score=ex_store_data["seat_score"],
-    #     second_reason=ex_store_data["seat_reason"],
-    #     second_reason_captions=ex_store_data["seat_reason_caps"]
-    # )
-    
-    # 프롬프트 정의
-    with open("./scoring/prompts/image_captioner.txt", "r", encoding="utf-8") as f:
-        template = f.read()
-    captioner_user_prompt = template
-    
-    with open("./scoring/prompts/image_inn_scorer.txt", "r", encoding="utf-8") as f:
-        template = f.read()
-    inn_scorer_user_prompt = PromptTemplate.from_template(
-        template=template,
-        partial_variables={
-            "ex_name": ex_name,
-            "ex_captions": ex_captions,
-            "ex_response": inn_ex_response,
-            "name": state.raw_store_data["name"]
-        }
-    )
-    
-    with open("./scoring/prompts/image_seat_scorer.txt", "r", encoding="utf-8") as f:
-        template = f.read()
-    seat_scorer_user_prompt = template.format(
-        ex_name=ex_name,
-        ex_response=seat_ex_response,
-        name=state.raw_store_data["name"]
-    )
-    
-    with open("./scoring/prompts/image_formatter.txt", "r", encoding="utf-8") as f:
-        template = f.read()
-    formatter_user_prompt = PromptTemplate.from_template(
-        template=template
-    )
-    
     return {
-        "captioner_user_prompt": captioner_user_prompt, 
-        "inn_scorer_user_prompt": inn_scorer_user_prompt,
-        "seat_scorer_user_prompt": seat_scorer_user_prompt,
-        "formatter_user_prompt": formatter_user_prompt,
         "image_contents": image_contents,
         "branch": "success"
     }
 
-async def captioner_node(state: ImgGraphState) -> Dict[str, Any]:
-    # 이미 캡션이 있으면 다음 노드로 이동
-    if state.image_captions:
-        return {}
+# 두 노드를 동시에 실행시키기 위해 필요한 더미 노드
+def dispatcher_node(state: ImgGraphState) -> Dict[str, Any]:
     
-    # 첫번째 LLM: 각 이미지 캡션 작성
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        temperature=0,
-        thinking_budget=0,
-        timeout=30,
-        max_retries=3
-    )
-    
-    # 한번에 최대 5개 LLM 호출로 제한
-    sema = asyncio.Semaphore(5)
-    
-    async def caption_one_image(state: ImgGraphState, image_content: Dict[str, str]):
-        async with sema:
-            try:
-                response = await llm.ainvoke([
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": state.captioner_user_prompt},
-                            image_content
-                        ]
-                    }
-                ])
-                return response
-            except Exception as e:
-                return e
-        
-    tasks = [caption_one_image(state, ic) for ic in state.image_contents[:10]]
-    responses = await asyncio.gather(*tasks, return_exceptions=True)
-    image_captions = ["없음" if isinstance(r, Exception) else r.content for r in responses]
-            
-    return {"image_captions": image_captions}
+    return{}
 
 # 내부 점수를 부여하는 LLM을 실행시키는 노드
 async def inn_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
@@ -149,21 +41,40 @@ async def inn_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
         max_retries=3
     )
     
-    # 캡션 풀어쓰기
-    captions = ""
-    for index, caption in enumerate(state.image_captions):
-        captions += f"{index}: {caption}\n"
+    # LLM에 최종적으로 들어갈 input
+    input_messages = []
     
-    user_message = {
-        "role": "user", 
-        "content": state.inn_scorer_user_prompt.format(captions=captions)
+    # 스코어링 지시 message
+    with open("./scoring/prompts/image_inn_scorer.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction_message = {
+        "role": "user",
+        "content": template
     }
     
-    response = await llm.ainvoke(
-        state.messages + [user_message]
-    )
+    # few-shot messages
+    with open("./data/examples/inn_few_shot_messages.json", "r", encoding="utf-8") as f:
+        inn_few_shot_messages: list = json.load(f)
     
-    return {"messages": [user_message, response], "inn_response": response.content}
+    # 진짜로 묻고싶은 input message    
+    user_message = {
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": f"'{state.raw_store_data.get('name')}' 매장에 대한 평가를 해주세요."
+            }
+        ] + state.image_contents[:10]
+    }
+    
+    input_messages += state.messages
+    input_messages.append(instruction_message)
+    input_messages += inn_few_shot_messages # state.messages 기록에는 들어가지 않음
+    input_messages.append(user_message)
+    
+    response = await llm.ainvoke(input_messages)
+    
+    return {"messages": [instruction_message, user_message, response], "inn_response": response.content}
 
 # 좌석수 점수를 부여하는 LLM을 실행시키는 노드
 async def seat_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
@@ -176,9 +87,31 @@ async def seat_scorer_node(state: ImgGraphState) -> Dict[str, Any]:
         max_retries=3
     )
     
+    # example용 가상 매장 데이터
+    ex_name = "쟈니 다이너"
+    seat_ex_response = f"""name: {ex_name}
+    seat_score: 0.5
+    seat_reason: 1, 2, 5, 7, 8, 9에서 확인된 좌석 합계가 32석으로 30석 초과 구간에 해당하여 조정점수 +0.5.
+    seat_reason_idxs: [1, 2, 5, 7, 8, 9]
+    """
+    
+    # 스코어링 지시문
+    with open("./scoring/prompts/image_seat_scorer.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction = template.format(
+        ex_name=ex_name,
+        ex_response=seat_ex_response,
+        name=state.raw_store_data["name"]
+    )
+    
     user_message = {
         "role": "user", 
-        "content": [state.seat_scorer_user_prompt] + state.image_contents[:10]
+        "content": [
+            {
+                "type": "text",
+                "text": instruction
+            }
+        ] + state.image_contents[:10]
     }
     
     response = await llm.ainvoke(
@@ -199,9 +132,16 @@ async def formatter_node(state: ImgGraphState) -> Dict[str, Any]:
         max_retries=3
     ).with_structured_output(ImageResultLLM)
     
+    # formatting 지시문
+    with open("./scoring/prompts/image_formatter.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction = PromptTemplate.from_template(
+        template=template
+    )
+    
     user_message = {
         "role": "user", 
-        "content": state.formatter_user_prompt.format(
+        "content": instruction.format(
             inn_response=state.inn_response,
             seat_response=state.seat_response
         )
@@ -230,10 +170,7 @@ def validator_node(state: ImgGraphState) -> Dict[str, Any]:
             "attempts": state.attempts + 1,
         }
     
-    retry_reason = """
-    평가 결과가 잘못되었으므로 재평가하세요.
-    잘못된 이유: 
-    """
+    retry_reason = "평가 결과가 잘못되었으므로 재평가하세요.\n잘못된 이유:\n"
     if need_inn:
         retry_reason += "내부 점수는 0.0, 1.0, 2.0, 3.0, 4.0, 5.0 중의 하나여야 합니다.\n"
     if need_seat:
