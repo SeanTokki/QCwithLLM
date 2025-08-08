@@ -59,68 +59,33 @@ def real_get_food_images(image_list: List[str]) -> List[Dict]:
 # 사용 가능한 tools
 tools = [similar_partner_search, get_food_images]
 
-# 프롬프트를 생성하는 노드
-def prompter_node(state: ImgGraphState) -> Dict[str, Any]:
-    store_data = state.raw_store_data
-    
-    # 카테고리 매칭 규칙 불러오기
-    with open("./data/rules/category_score_rule.json", "r", encoding="utf-8") as f:
-        matching_rule = json.load(f)
-    
-    # example용 데이터
-    with open("./data/examples/example_scored_store_data.json", "r", encoding="utf-8") as f:
-        ex_store_data = json.load(f)
-    
-    target_keys = ["name", "category", "menu_list", "review_list"]
-    name, category, menu_list, review_list = [store_data.get(k) for k in target_keys]
-    ex_target_keys = ["name", "category", "menu_list", "review_list", "top_cat", "sub_cat", "cat_score", "cat_reason"]
-    ex_name, ex_category, ex_menu_list, ex_review_list, ex_top_cat, ex_sub_cat, ex_score, ex_reason = [ex_store_data.get(k) for k in ex_target_keys]
-    ex_response = json.dumps(
-        {"name": ex_name, "top_category": ex_top_cat, "sub_category": ex_sub_cat, "score": ex_score, "reason": ex_reason},
-        ensure_ascii=False,
-    )
-    
-    # 프롬프트 정의
-    with open("./scoring/prompts/category_1.txt", "r", encoding="utf-8") as f:
-        template = f.read()
-    first_user_prompt = template.format(
-        matching_rule=matching_rule,
-        name=name,
-        category=category,
-        menu_list=menu_list,
-        review_list=review_list
-    )
-    
-    with open("./scoring/prompts/category_2.txt", "r", encoding="utf-8") as f:
-        template = f.read()
-    second_user_prompt = template.format(
-        matching_rule=matching_rule,
-        ex_name=ex_name,
-        ex_category=ex_category,
-        ex_menu_list=ex_menu_list,
-        ex_review_list=ex_review_list,
-        ex_response=ex_response,
-        name=name,
-        category=category,
-        menu_list=menu_list,
-        review_list=review_list
-    )
-    
-    return {
-        "first_user_prompt": first_user_prompt, 
-        "second_user_prompt": second_user_prompt
-    }
-
-# 첫번째 LLM을 실행시키는 노드
+# 도구 사용 여부를 판단하는 LLM을 실행시키는 노드
 async def tool_checker_node(state: CatGraphState):
     # 첫번째 LLM: 주어진 정보만으로 카테고리 매칭이 가능한지 판단
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
         temperature=0,
-        thinking_budget=1024,
+        thinking_budget=0,
+        timeout=30,
+        max_retries=3
     ).bind_tools(tools)
     
-    user_message = {"role": "user", "content": state.first_user_prompt}
+    # 카테고리 매칭 규칙
+    with open("./data/rules/category_score_rule.json", "r", encoding="utf-8") as f:
+        matching_rule = json.load(f)
+        
+    # 도구 사용 여부 판단 지시문
+    with open("./scoring/prompts/category_tool_checker.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction = template.format(
+        matching_rule=matching_rule,
+        name=state.raw_store_data.get("name"),
+        category=state.raw_store_data.get("category"),
+        menu_list=state.raw_store_data.get("menu_list"),
+        review_list=state.raw_store_data.get("review_list")
+    )
+    
+    user_message = {"role": "user", "content": instruction}
     response = await llm.ainvoke(state.messages + [user_message])
     
     # tool call message 존재 여부에 따라 분기
@@ -142,7 +107,7 @@ def tool_node(state: CatGraphState):
         if tool_call["name"] == "similar_partner_search":
             tool_result = real_similar_partner_search(state.raw_store_data)
             content = json.dumps(tool_result, ensure_ascii=False)
-        # get_food_images 도구가 호출된 경우 직접 store_data["image_list"]를 전달
+        # get_food_images 도구가 호출된 경우 직접 store_data["food_image_list"]를 전달
         elif tool_call["name"] == "get_food_images":
             tool_result = real_get_food_images(state.raw_store_data.get("food_image_list"))
             if len(tool_result) == 1:
@@ -164,25 +129,58 @@ def tool_node(state: CatGraphState):
     
     return {"messages": tool_messages + human_messages}
 
-# 두번째 LLM을 실행시키는 노드
-async def scorer_node(state: CatGraphState):
-    # 3회 이상 재시도시 workflow 종료
-    if state.attempts > 3:
-        print(f"[메뉴 점수] 재시도 횟수 초과로 스코어링 불가")
-        return {"matching_result": None, "branch": "too_many_attempts"}
-    
+# 점수를 부여하는 LLM을 실행시키는 노드
+async def scorer_node(state: CatGraphState):    
     # 두번째 LLM: 카테고리 매칭 및 스코어링을 진행하고 format에 맞게 반환
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
         temperature=0,
-        thinking_budget=1024,
+        thinking_budget=0,
+        timeout=30,
+        max_retries=3
     ).with_structured_output(CategoryResult)
     
-    user_message = {"role": "user", "content": state.second_user_prompt}
+    # 카테고리 매칭 규칙
+    with open("./data/rules/category_score_rule.json", "r", encoding="utf-8") as f:
+        matching_rule = json.load(f)
+    
+    # example용 데이터
+    with open("./data/examples/example_scored_store_data.json", "r", encoding="utf-8") as f:
+        ex_store_data: Dict[str, Any] = json.load(f)
+    
+    # example response
+    ex_response = json.dumps(
+        {
+            "name": ex_store_data.get("name"), 
+            "top_category": ex_store_data.get("top_cat"), 
+            "sub_category": ex_store_data.get("sub_cat"), 
+            "score": ex_store_data.get("cat_score"), 
+            "reason": ex_store_data.get("cat_reason")
+        },
+        ensure_ascii=False,
+    )
+
+    # 스코어링 지시문
+    with open("./scoring/prompts/category_scorer.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction = template.format(
+        matching_rule=matching_rule,
+        ex_name=ex_store_data.get("name"),
+        ex_category=ex_store_data.get("category"),
+        ex_menu_list=ex_store_data.get("menu_list"),
+        ex_review_list=ex_store_data.get("menu_list"),
+        ex_response=ex_response,
+        name=state.raw_store_data.get("name"),
+        category=state.raw_store_data.get("category"),
+        menu_list=state.raw_store_data.get("menu_list"),
+        review_list=state.raw_store_data.get("review_list")
+    )
+    
+    user_message = {"role": "user", "content": instruction}
     response = await llm.ainvoke(state.messages + [user_message])
     ai_message = {"role": "ai", "content": response.model_dump_json()}
     
-    return {"messages": [user_message, ai_message], "matching_result": response, "branch": "success"}
+    return {"messages": [user_message, ai_message], "matching_result": response}
 
 # 카테고리 매칭 결과의 유효성을 체크하는 노드
 def validator_node(state: CatGraphState):
@@ -205,10 +203,7 @@ def validator_node(state: CatGraphState):
     sub = state.matching_result.sub_category
     score = state.matching_result.score
     
-    retry_reason = """
-    카테고리 매칭 결과가 잘못되었으므로 재매칭하세요.
-    잘못된 이유: 
-    """
+    retry_reason = "카테고리 매칭 결과가 잘못되었으므로 재매칭하세요.\n잘못된 이유:\n"
     branch = "valid"
     
     if not isinstance(score, int) or not 0 <= score <= 5:
@@ -232,17 +227,25 @@ def validator_node(state: CatGraphState):
                 branch = "invalid"
                 retry_reason += f" '{sub}' 하위 카테고리에 대한 점수는 {expected}점 입니다.\n"
 
-    if branch == "invalid":
-        return {
-            "branch": branch,
-            "attempts": state.attempts + 1,
-            "messages": [{"role": "user", "content": retry_reason}]
-        }
+    # 이상이 없다면 다음 노드로 진행
+    if branch == "valid":
+        return {"branch": "valid"}
     
-    else:
+    # 3회 이상 재시도시 workflow 종료
+    if state.attempts + 1 > 3:
+        print(f"[메뉴 점수] 재시도 횟수 초과로 스코어링 불가")
         return {
-            "branch": branch
+            "matching_result": None,
+            "branch": "too many attempts",
+            "attempts": state.attempts + 1,
         }
+
+    # 이상이 있다면 틀린 부분을 알려주고 재시도
+    return {
+        "branch": branch,
+        "attempts": state.attempts + 1,
+        "messages": [{"role": "user", "content": retry_reason}]
+    }
 
 #=====================================================================================================
 # 여기부터는 현재 사용 안함

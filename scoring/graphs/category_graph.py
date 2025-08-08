@@ -6,14 +6,12 @@ from scoring.nodes.category_nodes import *
 def build_graph():
     workflow = StateGraph(CatGraphState)
     
-    workflow.add_node("prompter", prompter_node)
     workflow.add_node("tool_checker", tool_checker_node)
     workflow.add_node("tools", tool_node)
     workflow.add_node("scorer", scorer_node)
     workflow.add_node("validator", validator_node)
     
-    workflow.add_edge(START, "prompter")
-    workflow.add_edge("prompter", "tool_checker")
+    workflow.add_edge(START, "tool_checker")
     workflow.add_conditional_edges(
         "tool_checker", 
         lambda s: s.branch,
@@ -23,20 +21,14 @@ def build_graph():
         }
     )
     workflow.add_edge("tools", "scorer")
-    workflow.add_conditional_edges(
-        "scorer",
-        lambda s: s.branch,
-        {
-            "too_many_attempts": END,
-            "success": "validator"
-        }
-    )
+    workflow.add_edge("scorer", "validator")
     workflow.add_conditional_edges(
         "validator",
         lambda s: s.branch,
         {
             "invalid": "scorer",
-            "valid": END
+            "valid": END,
+            "too_many_attempts": END
         }
     )
     
@@ -44,17 +36,16 @@ def build_graph():
 
 async def run_graph(graph: CompiledStateGraph, store_data: Dict[str, Any]) -> Optional[CategoryResult]:
     # 시스템 프롬프트
-    system_prompt = """
-    ## Role
-    당신은 카테고리 매칭 전문가입니다.
-    당신은 특정 매장이 제휴를 맺기 적합한 매장인지 판단하기 위해 점수 기준표에 따라 매장의 카테고리를 매칭하고 점수를 부여하는 역할을 맡고 있습니다.
-    차근차근 단계별로 생각하며 지시를 수행하세요.
-    """
+    with open("./scoring/prompts/category_system.txt", "r", encoding="utf-8") as f:
+        system_prompt = f.read()
     
     inputs = {
         "raw_store_data": store_data,
         "messages": [{"role": "system", "content": system_prompt}],
     }
+    
+    # 그래프 이미지 저장
+    visualize_graph(graph, "./data/graphs/category_graph.png")
     
     # 그래프 실행
     result= await graph.ainvoke(input=inputs)

@@ -43,8 +43,6 @@ class CatGraphState(BaseModel):
     """카테고리 매칭 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
-    first_user_prompt: Optional[str] = None
-    second_user_prompt: Optional[str] = None
     matching_result: Optional[CategoryResult] = None
     branch: Optional[str] = None
     attempts: int = 1
