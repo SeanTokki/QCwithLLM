@@ -1,0 +1,5 @@
+## Instruction
+- 다음 LLM 응답을 주어진 형식에 맞게 변환합니다.
+
+## LLM Response
+{response}

@@ -69,8 +69,7 @@ class AddGraphState(BaseModel):
     """추가 점수 부여 그래프 상태"""
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
-    first_user_prompt: Optional[str] = None
-    second_user_prompt: Optional[str] = None
+    add_response: Optional[str | list[str | dict]] = None
     additional_result: Union[AdditionalResult, AdditionalResultLLM, None] = None
     branch: Optional[str] = None
     attempts: int = 1
