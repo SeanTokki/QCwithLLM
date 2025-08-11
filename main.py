@@ -1,105 +1,61 @@
 from dotenv import load_dotenv
 import os
 import asyncio
-import json
-from time import perf_counter
-import random
 from tqdm import tqdm
-import csv
 
-from scoring.category_scoring import get_category_result
-from scoring.image_scoring import get_image_result
-from scoring.additional_scoring import get_additional_result
-from scoring.position_scoring import get_position_result
-from scoring.category_graph import build_graph
-from schema import *
+from scoring.pipeline import run_full_pipeline, make_full_result
+from scoring.graphs.category_graph import build_graph as build_cat_graph
+from scoring.graphs.image_graph import build_graph as build_img_graph
+from scoring.graphs.additional_graph import build_graph as build_add_graph
+from db import get_store, save_score
 
-async def run_full_pipeline(graph, store_data):
-    tasks = {
-        "category_result": lambda: get_category_result(graph, store_data),
-        "image_result": lambda: get_image_result(store_data),
-        "additional_result": lambda: get_additional_result(store_data),
-        "position_result": lambda: get_position_result(store_data)
-    }
-    
-    result = {k: None for k in tasks.keys()}
-    
-    for _ in range(3):
-        pending = [k for k, v in result.items() if v is None]
-        if not pending:
-            break
-
-        new_values = await asyncio.gather(*[tasks[k]() for k in pending])
-        result.update(dict(zip(pending, new_values)))
-    
-    return result
-
-def calc_score(result):
-    total_score = 0
-    total_score += result["position_result"].score
-    total_score += result["category_result"].score
-    total_score += result["image_result"].score
-    total_score /= 3
-    total_score += result["additional_result"].score
-    
-    return round(total_score, 1)
-
-def make_full_result(naver_id, result) -> Optional[FullResult]:
-    pos_res: PositionResult = result["position_result"]
-    cat_res: CategoryResult = result["category_result"]
-    img_res: ImageResult = result["image_result"]
-    add_res: AdditionalResult = result["additional_result"]
-    
-    if None in [pos_res, cat_res, img_res, add_res]:
-        return None
-    
-    full_result = FullResult(
-        naver_id=naver_id,
-        name=pos_res.name,
-        pos_score=pos_res.score,
-        pos_reason=pos_res.reason,
-        top_cat=cat_res.top_category,
-        sub_cat=cat_res.sub_category,
-        cat_reason=cat_res.reason,
-        cat_score=cat_res.score,
-        inn_score=img_res.first_score,
-        inn_reason=img_res.first_reason,
-        inn_reason_img=img_res.first_reason_image,
-        seat_score=img_res.second_score,
-        seat_reason=img_res.second_reason,
-        seat_reason_img=img_res.second_reason_image,
-        img_score=img_res.score,
-        add_items=add_res.items,
-        add_score=add_res.score,
-        tot_score=calc_score(result)
-    )
-    
-    return full_result
-
-if __name__ == "__main__":
+async def main(request_ids):
     load_dotenv(dotenv_path=".env")
     os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
-
-    graph = build_graph()
-    with open("./data/test/store_data/merged_filtered_store_data.json", "r", encoding="utf-8") as f:
-        store_data = json.load(f)
-    data = store_data[0]
     
-    result = asyncio.run(run_full_pipeline(graph, data))
-    full_result = make_full_result(data["naver_id"], result)
-    print(full_result)
+    # 그래프 빌드
+    graphs = {}
+    graphs["cat"] = await asyncio.to_thread(build_cat_graph)
+    graphs["img"] = await asyncio.to_thread(build_img_graph)
+    graphs["add"] = await asyncio.to_thread(build_add_graph)
     
-    # for data in tqdm(store_data, "scoring"):
-    #     result = asyncio.run(run_full_pipeline(graph, data))
-    #     full_result = make_full_result(data["naver_id"], result)
-    #     if full_result == None:
-    #         continue
+    for naver_id in tqdm(request_ids, desc="scoring", unit="store"):
+        store = get_store(naver_id)
+        result = await run_full_pipeline(graphs, store)
+        full_result = make_full_result(naver_id, result)
+        if full_result:
+            save_score(naver_id, full_result.model_dump())
+        else:
+            print(f"[{naver_id}] scoring failed.")
 
-    #     with open("./data/for_request/add/full_scoring_result.json", "r", encoding="utf-8") as f:
-    #         results = json.load(f)
-        
-    #     results.append(full_result.model_dump())
-        
-    #     with open("./data/for_request/add/full_scoring_result.json", "w", encoding="utf-8") as f:
-    #         json.dump(results, f, ensure_ascii=False, indent=4)
+
+if __name__ == "__main__":
+    # 검수자 분들께 요청드렸던 전체 매장 목록
+    # request_ids = ["1312258541", "11679381", "1365054072", "1730142162", "1371876716", "1751991640", "1517487358", "1729346749", 
+    #                "1789793457", "1875023937", "1704335002", "2069798395", "11856990", "247810366", "1753238133", "1555088233", 
+    #                "1469921031", "1200031483", "1240503952", "1647968724", "1165436888", "1336731916", "1247085253", "1684619726", 
+    #                "1689266518", "13015562", "1270894354", "1003545719", "1937156788", "1627625590", "1047361327", "1897381601", 
+    #                "1259930451", "1660575874", "1681547627", "1224384502", "1550229480", "1130667388", "1883490486", "1060664440", 
+    #                "37864806", "1876571985", "1508243090", "1747158250", "1770977158", "1689555137", "1130497590", "768688023", 
+    #                "11700226", "1068354679", "1185221694", "11678773", "1443081237", "1335290092", "140139147", "1046469739", 
+    #                "1124710522", "1057884253", "1445744498", "1370341094", "1693891987", "1830163153", "1127705304", "1256999271", 
+    #                "1866031034", "1463841684", "1804004435", "1285186695", "1281708874", "1642486910", "1942663107", "34582227", 
+    #                "1713855997", "1935471901", "1499358207", "1047144456", "2092510977", "1250235967", "1647032458", "1053282197", 
+    #                "1233920777", "1729155274", "1958568498", "1030835435", "1138672724", "1937294388", "1763662575", "1560084869", 
+    #                "1802962451", "1739105800", "20597120", "1063104133", "35532762", "1729106110", "1463608577", "1174718905", 
+    #                "1971705948", "1140019690", "1557683010", "11718044", "1720089249", "1328581940", "1603381706", "1987157240", 
+    #                "1411713405", "1342487435", "1861187627", "1818437557", "1655389142", "1028527870", "1385833969", "1977658488", 
+    #                "1122500485", "1688454165", "1992522130", "1677955576", "1792530692", "1873613500", "1117848167", "1340743361", 
+    #                "1124361834", "2025345487", "1450319011", "1020595480"]
+    # 현재까지 완료된 매장 목록
+    # request_ids = ["1312258541", "11679381", "1365054072", "1730142162", "1371876716", "1751991640", "1517487358", 
+    #                "1875023937", "1627625590", "1047361327", "1897381601", "1259930451", "1660575874", "140139147", 
+    #                "1124710522", "1411713405", "1342487435", "1861187627", "1818437557", "1655389142", "1028527870", "1385833969", 
+    #                "1122500485", "1688454165", "1992522130", "1677955576", "1792530692", "1873613500", "1117848167",
+    #                "1340743361", "1124361834", "2025345487", "1450319011", "1020595480", "1681547627", "1224384502", "1550229480",
+    #                "1130667388", "1883490486", "1060664440", "37864806", "1876571985", "1508243090", "1747158250", "1789793457"]
+    # few-shot으로 사용해서 제외한 매장 목록
+    request_ids = ["1729346749", "1977658488"]
+    
+    asyncio.run(main(request_ids))
 

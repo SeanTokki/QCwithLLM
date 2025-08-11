@@ -62,11 +62,22 @@ def make_comparison_table(gt_df: pd.DataFrame,
 
     return tbl
 
+def dict_to_list(ipath: str, opath: str):
+    with open(ipath, "r", encoding="utf-8") as f:
+        data: dict = json.load(f)
+    
+    new_data = []
+    for item in data.values():
+        new_data.append(item)
+    
+    with open(opath, "w", encoding="utf-8") as f:
+        json.dump(new_data, f, ensure_ascii=False, indent=2)
+
 if __name__ == "__main__":
-    # 1) 데이터 로드
+    # 1) 데이터 로드 (list of dict 형태여야 함)
+    dict_to_list("./data/test/scores.json", "./data/test/scores_list.json")
     gt_df   = load_json_as_df("./data/examples/example_scores.json")
     pred_df = load_json_as_df("./data/test/scores_list.json")
-    # pred_df = load_json_as_df("./data/request/selected_full_scored_result_string_id.json")
 
     # 2) ground-truth에 있는 매장만 필터링하여 병합
     df = (gt_df
