@@ -7,7 +7,9 @@ def build_graph():
     workflow = StateGraph(ImgGraphState)
     
     workflow.add_node("preprocessor", preprocessor_node)
+    workflow.add_node("captioner", captioner_node)
     workflow.add_node("dispatcher", dispatcher_node)
+    workflow.add_node("inn_scorer_with_caps", inn_scorer_with_caps_node)
     workflow.add_node("inn_scorer", inn_scorer_node)
     workflow.add_node("seat_scorer", seat_scorer_node)
     workflow.add_node("formatter", formatter_node)
@@ -26,6 +28,17 @@ def build_graph():
     workflow.add_edge("dispatcher", "inn_scorer")
     workflow.add_edge("dispatcher", "seat_scorer")
     workflow.add_edge("inn_scorer", "formatter")
+    # workflow.add_conditional_edges(
+    #     "preprocessor",
+    #     lambda s: s.branch,
+    #     {
+    #         "no_image": END,
+    #         "success": "captioner"
+    #     }
+    # )
+    # workflow.add_edge("captioner", "inn_scorer_with_caps")
+    # workflow.add_edge("captioner", "seat_scorer")
+    # workflow.add_edge("inn_scorer_with_caps", "formatter")
     workflow.add_edge("seat_scorer", "formatter")
     workflow.add_edge("formatter", "validator")
     workflow.add_conditional_edges(

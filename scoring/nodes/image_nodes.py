@@ -25,6 +25,88 @@ def preprocessor_node(state: ImgGraphState) -> Dict[str, Any]:
         "branch": "success"
     }
 
+# 이미지 캡션 생성 노드
+async def captioner_node(state: ImgGraphState) -> Dict[str, Any]:
+    # 이미 캡션이 있으면 다음 노드로 이동
+    if state.image_captions:
+        return {}
+    
+    # 첫번째 LLM: 각 이미지 캡션 작성
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        temperature=0,
+        thinking_budget=0,
+        timeout=30,
+        max_retries=3
+    )
+    
+    # 캡셔닝 지시문
+    with open("./scoring/prompts/image_captioner.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction = template
+    
+    # 한번에 최대 5개 LLM 호출로 제한
+    sema = asyncio.Semaphore(5)
+    
+    async def caption_one_image(state: ImgGraphState, image_content: Dict[str, str]):
+        async with sema:
+            try:
+                response = await llm.ainvoke([
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": instruction},
+                            image_content
+                        ]
+                    }
+                ])
+                return response
+            except Exception as e:
+                return e
+        
+    tasks = [caption_one_image(state, ic) for ic in state.image_contents[:10]]
+    responses = await asyncio.gather(*tasks, return_exceptions=True)
+    image_captions = ["없음" if isinstance(r, Exception) else r.content for r in responses]
+            
+    return {"image_captions": image_captions}
+
+# 캡션으로 내부 점수를 부여하는 LLM을 실행시키는 노드
+async def inn_scorer_with_caps_node(state: ImgGraphState) -> Dict[str, Any]:
+    # 두번째 LLM: 내부 인테리어 평가
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.5-flash",
+        temperature=0,
+        thinking_budget=0,
+        timeout=30,
+        max_retries=3
+    )
+    
+    # 캡션 풀어쓰기
+    captions = ""
+    for index, caption in enumerate(state.image_captions):
+        captions += f"{index}: {caption}\n"
+    
+    # 스코어링 지시문
+    with open("./scoring/prompts/image_inn_scorer_with_caps.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction = template + "\n\n"
+    
+    # few-shot 프롬프트
+    with open("./scoring/prompts/image_inn_caption_few_shot.txt", "r", encoding="utf-8") as f:
+        template = f.read()
+    instruction += template.format(name=state.raw_store_data.get('name'), captions=captions)
+    
+    user_message = {
+        "role": "user", 
+        "content": instruction
+    }
+    
+    response = await llm.ainvoke(
+        state.messages + [user_message]
+    )
+    
+    return {"messages": [user_message, response], "inn_response": response.content}
+
 # 두 노드를 동시에 실행시키기 위해 필요한 더미 노드
 def dispatcher_node(state: ImgGraphState) -> Dict[str, Any]:
     
@@ -193,7 +275,10 @@ def postprocessor_node(state: ImgGraphState) -> Dict[str, Any]:
     inn_image_urls = []
     for index in response.inn_reason_idxs:
         if index < len(image_contents):
-            inn_image_urls.append(image_contents[index]["url"])
+            if state.image_captions:
+                inn_image_urls.append(image_contents[index]["url"])
+            else:
+                inn_image_urls.append(image_contents[index-1]["url"])
     seat_image_urls = []
     for index in response.seat_reason_idxs:
         if index <= len(image_contents):

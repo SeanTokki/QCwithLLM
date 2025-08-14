@@ -25,6 +25,7 @@ class ImgGraphState(BaseModel):
     raw_store_data: Dict[str, Any]
     messages: Annotated[list, add_messages]
     image_contents: List[Dict[str, str]] = Field(default_factory=list)
+    image_captions: List[str] = Field(default_factory=list)
     inn_response: Optional[str | list[str | dict]] = None
     seat_response: Optional[str | list[str | dict]] = None
     image_result: Union[ImageResult, ImageResultLLM, None] = None
